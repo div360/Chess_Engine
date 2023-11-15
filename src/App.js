@@ -1,23 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+import ChessInfo2 from './ChessInfo2/chessInfo2';
+import ChessInfo3 from './ChessInfo3/chessInfo3';
+import ChessInfo1 from './ChessInfo_1/chessInfo1';
+import Footer from './Footer/footer';
+import Header from './Header/header';
+import Hero from './Hero/hero';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="h-[100vh] bg-black">
+      <Header/>
+      <Hero/>
+      <ChessInfo1/>
+      <ChessInfo2/>
+      <ChessInfo3/>
+      <Footer/>
     </div>
   );
 }

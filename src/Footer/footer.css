@@ -1,0 +1,35 @@
+.gradient-line-left3 {
+    position: absolute;
+    top: 30%;
+    left: 5%;
+    width: 40%;
+    height: 0.1rem; 
+    background: linear-gradient(to left, rgb(163, 163, 163) 30%, rgb(163, 163, 163) 30%);
+}
+
+.gradient-line-right3 {
+    position: absolute;
+    top: 30%;
+    right: 5%;
+    width: 40%;
+    height: 0.1rem; 
+    background: linear-gradient(to right, rgb(163, 163, 163) 30%, rgb(163, 163, 163) 30%);
+}
+
+.gradient-line-vertical-left2 {
+    position: absolute;
+    top: 30%;
+    right: 5%;
+    width: 0.05rem;
+    height: 50%; 
+    background: linear-gradient(to bottom, rgb(163, 163, 163) 30%, rgb(163, 163, 163) 30%);
+}
+
+.gradient-line-vertical-right2 {
+    position: absolute;
+    top: 30%;
+    left: 5%;
+    width: 0.05rem;
+    height: 50%; 
+    background: linear-gradient(to bottom, rgb(163, 163, 163) 30%, rgb(163, 163, 163) 30%);
+}
