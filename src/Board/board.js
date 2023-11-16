@@ -8,7 +8,7 @@ function Board() {
 
     useEffect(() => {
         setBoard(fenToBoard(fen));
-    }, [board]);
+    }, [fen]);
 
     const letters = ["a", "b", "c", "d", "e", "f", "g", "h"];
     const numbers = [8, 7, 6, 5, 4, 3, 2, 1];
@@ -24,8 +24,15 @@ function Board() {
         if (type === "k") return `assets/chess_pieces/king_${color}.png`;
     };
 
+    const handlePieceClick = (e) => {
+
+    }
+
     return (
-        <div className="flex justify-center items-center h-screen font-[Athiti] font-semibold bg-[#212121]">
+        <div className="flex flex-col justify-center items-center h-screen font-[Athiti] font-semibold bg-[#212121]">
+
+                <input className="w-1/4" type="text" value={fen} onChange={(e) => setFen(e.target.value)} />
+
                 <div className="grid grid-cols-8 h-[800px] w-[800px] ring-8 ring-[#78784e] scale-90">
                     {board.map((row, rowIndex) =>
                         row.map((piece, colIndex) => (
@@ -45,11 +52,12 @@ function Board() {
                             >
                                 {piece && 
                                     
-                                    <img
+                                    <img onMouseDown={(e) => {e.preventDefault()}}
+                                        onClick={handlePieceClick}
                                         id={`${letters[colIndex]}${numbers[rowIndex]}`}
                                         key={`${letters[colIndex]}${numbers[rowIndex]}`}
                                         src={getPieceImage(piece)}
-                                        className="h-17 w-17 cursor-grab"
+                                        className="h-17 w-17 cursor-pointer"
                                     />
                                         
                                 }
