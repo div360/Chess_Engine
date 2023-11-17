@@ -14,6 +14,7 @@ function Board() {
 
     useEffect(() => {
         setBoard(fenToBoard(fen));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fen]);
 
     const letters = ["a", "b", "c", "d", "e", "f", "g", "h"];
@@ -93,6 +94,7 @@ function Board() {
         if(fromSquare === toSquare) return;
 
         movePiece(fromSquare, toSquare)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fromSquare, toSquare]);
 
     return (
@@ -124,6 +126,7 @@ function Board() {
                                         key={`${letters[colIndex]}${numbers[rowIndex]}`}
                                         src={getPieceImage(piece)}
                                         className="h-17 w-17 cursor-pointer"
+                                        alt={`${letters[colIndex]}${numbers[rowIndex]}_piece`}
                                     />
                                         
                                 }
