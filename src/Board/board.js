@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { fenToBoard } from "./fenBoardLogic";
+import { fenToBoard, generateLegalMoves } from "./fenBoardLogic";
 import "./board.css";
 
 function Board() {
@@ -9,6 +9,8 @@ function Board() {
     
     const [fromSquare, setFromSquare] = useState(null);
     const [toSquare, setToSquare] = useState(null);
+
+    const [moves, setMoves] = useState([]);
 
     useEffect(() => {
         setBoard(fenToBoard(fen));
@@ -55,7 +57,7 @@ function Board() {
         const from_col = letters.indexOf(from[0]);
         const to_row = numbers.indexOf(parseInt(to[1]));
         const to_col = letters.indexOf(to[0]);
-        
+
         console.log(from_row, from_col, to_row, to_col)
 
         if (board && board[from_row] && board[from_row][from_col]) {
@@ -68,11 +70,23 @@ function Board() {
 
         setFromSquare(null);
         setToSquare(null);
+        setMoves([]);
     }
 
     useEffect(() => {
         if(fromSquare == null) return;
+
+        if(fromSquare !== null){
+            const moves = generateLegalMoves(board, fromSquare, numbers, letters);
+            console.log(moves);
+            if(moves != undefined){
+                setMoves(moves);
+            }
+        }
+
         if(toSquare == null) return;
+        if(moves.includes(toSquare) == false) return;
+        if(fromSquare == toSquare) return;
 
         movePiece(fromSquare, toSquare)
     }, [fromSquare, toSquare]);
@@ -95,8 +109,8 @@ function Board() {
                                         ? "bg-[#ebecd0] text-[#779556]"
                                         : "bg-[#779556] text-[#ebecd0]"
                                 } 
-                                ${fromSquare == `${letters[colIndex]}${numbers[rowIndex]}` ? " border-4 border-[#494949]" : ""}
-
+                                ${fromSquare == `${letters[colIndex]}${numbers[rowIndex]}` ? " border-4 border-[#494949] bg-[#deb845]" : ""}
+                                ${moves.includes(`${letters[colIndex]}${numbers[rowIndex]}`) ? `${(rowIndex + colIndex) % 2 == 0 ? "bg-[#e3d178]" : "bg-[#c5b253]"}   border-1 border-[#494949]` : ""}
                                 `}
                             >
                                 {piece && 
