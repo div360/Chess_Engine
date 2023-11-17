@@ -294,4 +294,4 @@ const generateLegalMoves = (board, fromSquare, numbers, letters) => {
     }
 }
 
-export { boardToFen, fenToBoard, generateLegalMoves };
+export { boardToFen, fenToBoard, generateLegalMoves, getPieceColor };
