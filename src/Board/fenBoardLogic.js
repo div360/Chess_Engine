@@ -39,6 +39,12 @@ const fenToBoard = (fen) => {
     return board;
 }
 
+const reverseFen = (fen) => {
+    const fenArray = fen.split("/");
+    const reversedFen = fenArray.reverse().join("/");
+    return reversedFen;
+}
+
 const getPieceAtSquare = (board, square_id, numbers, letters) => {
     const row = numbers.indexOf(parseInt(square_id[1]));
     const col = letters.indexOf(square_id[0]);
@@ -294,4 +300,4 @@ const generateLegalMoves = (board, fromSquare, numbers, letters) => {
     }
 }
 
-export { boardToFen, fenToBoard, generateLegalMoves, getPieceColor };
+export { boardToFen, fenToBoard, generateLegalMoves, getPieceColor, reverseFen };
