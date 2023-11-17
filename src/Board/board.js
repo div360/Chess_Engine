@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { fenToBoard, generateLegalMoves } from "./fenBoardLogic";
+import { fenToBoard, generateLegalMoves, getPieceColor } from "./fenBoardLogic";
 import "./board.css";
 
 function Board() {
@@ -44,6 +44,10 @@ function Board() {
                 setFromSquare(square_id);
             }
             else{
+                if(getPieceAtSquare(square_id) !== null && getPieceColor(getPieceAtSquare(square_id)) === getPieceColor(getPieceAtSquare(fromSquare))){
+                    setFromSquare(square_id);
+                    return;
+                }
                 setToSquare(square_id);
             }
         }
@@ -115,9 +119,8 @@ function Board() {
                                         ? "bg-[#ebecd0] text-[#779556]"
                                         : "bg-[#779556] text-[#ebecd0]"
                                 } 
-                                ${fromSquare === `${letters[colIndex]}${numbers[rowIndex]}` ? " border-4 border-[#494949] bg-[#deb845]" : ""}
-                                ${moves.includes(`${letters[colIndex]}${numbers[rowIndex]}`) ? `${(rowIndex + colIndex) % 2 === 0 ? "bg-[#e3d178]" : "bg-[#c5b253]"}   border-1 border-[#494949] cursor-pointer` : ""}
-                                `}
+                                ${fromSquare === `${letters[colIndex]}${numbers[rowIndex]}` ? " border-4 border-[#494949] bg-yellow-400" : ""}
+                                ${moves.includes(`${letters[colIndex]}${numbers[rowIndex]}`) ? `${(rowIndex + colIndex) % 2 === 0 ? "bg-[#f0d860]" : "bg-[#d4b727]"}   border-1 border-[#494949] cursor-pointer` : ""}                                `}
                             >
                                 {piece && 
                                     
