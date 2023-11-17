@@ -33,7 +33,7 @@ function Board() {
     const handlePieceClick = (e) => {
         const square_id = e.target.id;
 
-        if(fromSquare == square_id) {
+        if(fromSquare === square_id) {
             setFromSquare(null);
             setMoves([]);
         }
@@ -83,14 +83,14 @@ function Board() {
         if(fromSquare !== null){
             const moves = generateLegalMoves(board, fromSquare, numbers, letters);
             console.log(moves);
-            if(moves != undefined){
+            if(moves !== undefined){
                 setMoves(moves);
             }
         }
 
         if(toSquare === null) return;
-        if(moves.includes(toSquare) == false) return;
-        if(fromSquare == toSquare) return;
+        if(moves.includes(toSquare) === false) return;
+        if(fromSquare === toSquare) return;
 
         movePiece(fromSquare, toSquare)
     }, [fromSquare, toSquare]);
@@ -113,8 +113,8 @@ function Board() {
                                         ? "bg-[#ebecd0] text-[#779556]"
                                         : "bg-[#779556] text-[#ebecd0]"
                                 } 
-                                ${fromSquare == `${letters[colIndex]}${numbers[rowIndex]}` ? " border-4 border-[#494949] bg-[#deb845]" : ""}
-                                ${moves.includes(`${letters[colIndex]}${numbers[rowIndex]}`) ? `${(rowIndex + colIndex) % 2 == 0 ? "bg-[#e3d178]" : "bg-[#c5b253]"}   border-1 border-[#494949] cursor-pointer` : ""}
+                                ${fromSquare === `${letters[colIndex]}${numbers[rowIndex]}` ? " border-4 border-[#494949] bg-[#deb845]" : ""}
+                                ${moves.includes(`${letters[colIndex]}${numbers[rowIndex]}`) ? `${(rowIndex + colIndex) % 2 === 0 ? "bg-[#e3d178]" : "bg-[#c5b253]"}   border-1 border-[#494949] cursor-pointer` : ""}
                                 `}
                             >
                                 {piece && 
