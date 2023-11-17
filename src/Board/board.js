@@ -35,9 +35,11 @@ function Board() {
 
         if(fromSquare == square_id) {
             setFromSquare(null);
+            setMoves([]);
         }
         else{
-            if(fromSquare == null){
+            if(fromSquare === null){
+                if(getPieceAtSquare(square_id) === null) return;
                 setFromSquare(square_id);
             }
             else{
@@ -74,7 +76,9 @@ function Board() {
     }
 
     useEffect(() => {
-        if(fromSquare == null) return;
+
+        console.log(fromSquare, toSquare)
+        if(fromSquare === null) return;
 
         if(fromSquare !== null){
             const moves = generateLegalMoves(board, fromSquare, numbers, letters);
@@ -84,7 +88,7 @@ function Board() {
             }
         }
 
-        if(toSquare == null) return;
+        if(toSquare === null) return;
         if(moves.includes(toSquare) == false) return;
         if(fromSquare == toSquare) return;
 
@@ -110,7 +114,7 @@ function Board() {
                                         : "bg-[#779556] text-[#ebecd0]"
                                 } 
                                 ${fromSquare == `${letters[colIndex]}${numbers[rowIndex]}` ? " border-4 border-[#494949] bg-[#deb845]" : ""}
-                                ${moves.includes(`${letters[colIndex]}${numbers[rowIndex]}`) ? `${(rowIndex + colIndex) % 2 == 0 ? "bg-[#e3d178]" : "bg-[#c5b253]"}   border-1 border-[#494949]` : ""}
+                                ${moves.includes(`${letters[colIndex]}${numbers[rowIndex]}`) ? `${(rowIndex + colIndex) % 2 == 0 ? "bg-[#e3d178]" : "bg-[#c5b253]"}   border-1 border-[#494949] cursor-pointer` : ""}
                                 `}
                             >
                                 {piece && 
@@ -123,6 +127,9 @@ function Board() {
                                     />
                                         
                                 }
+                                {colIndex === 0 && <span className="absolute left-1 mb-20 h-3 w-3 font-[Poppins] font-semibold text-sm">{numbers[rowIndex]}</span>}
+
+                                {rowIndex === 7 && <span className="absolute bottom-4 ml-1 h-3 w-3 font-[Poppins] font-semibold text-sm">{letters[colIndex]}</span>}
                             </div>
                         ))    
                     )}

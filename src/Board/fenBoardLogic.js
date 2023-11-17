@@ -221,13 +221,58 @@ const generatePawnMoves = (board, fromSquare, numbers, letters) => {
     return moves;
 }
 
-
 const generateKnightMoves = (board, fromSquare, numbers, letters) => {
+    const moves = []
+    const row = numbers.indexOf(parseInt(fromSquare[1]));
+    const col = letters.indexOf(fromSquare[0]);
 
+    const directions = [
+        [-2, -1], [-2, 1], [-1, -2], [-1, 2],
+        [1, -2], [1, 2], [2, -1], [2, 1]
+    ];
+
+    for (const [dx, dy] of directions) {
+        const newRow = row + dx;
+        const newCol = col + dy;
+
+        if (newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) {
+            continue;
+        }
+
+        const piece = board[newRow][newCol];
+        if (piece === null || getPieceColor(piece) !== getPieceColor(board[row][col])) {
+            moves.push(letters[newCol] + numbers[newRow]);
+        }
+    }
+
+    return moves;
 }
 
 const generateKingMoves = (board, fromSquare, numbers, letters) => {
+    const moves = []
+    const row = numbers.indexOf(parseInt(fromSquare[1]));
+    const col = letters.indexOf(fromSquare[0]);
 
+    const directions = [
+        [-1, 0], [1, 0], [0, -1], [0, 1],
+        [-1, -1], [-1, 1], [1, -1], [1, 1]
+    ];
+
+    for (const [dx, dy] of directions) {
+        const newRow = row + dx;
+        const newCol = col + dy;
+
+        if (newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) {
+            continue;
+        }
+
+        const piece = board[newRow][newCol];
+        if (piece === null || getPieceColor(piece) !== getPieceColor(board[row][col])) {
+            moves.push(letters[newCol] + numbers[newRow]);
+        }
+    }
+
+    return moves;
 }
 
 const generateLegalMoves = (board, fromSquare, numbers, letters) => {
