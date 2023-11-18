@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from "react";
-import { fenToBoard, generateLegalMoves, getPieceColor } from "./fenBoardLogic";
+import { fenToBoard, generateLegalMoves, getPieceColor, reverseFen } from "./fenBoardLogic";
 import "./board.css";
 
 function Board() {
-
+    const fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+    
     const [board, setBoard] = useState([]);
-    const [fen, setFen] = useState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+    const [fen, setFen] = useState(fenString);
     
     const [fromSquare, setFromSquare] = useState(null);
     const [toSquare, setToSquare] = useState(null);
@@ -19,6 +20,9 @@ function Board() {
 
     const letters = ["a", "b", "c", "d", "e", "f", "g", "h"];
     const numbers = [8, 7, 6, 5, 4, 3, 2, 1];
+
+    // letters.reverse();
+    // numbers.reverse();
 
     const getPieceImage = (piece) => {
         const color = piece === piece.toUpperCase() ? "white" : "black";
