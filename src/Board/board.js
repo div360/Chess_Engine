@@ -2,27 +2,37 @@ import React, {useState, useEffect} from "react";
 import { fenToBoard, generateLegalMoves, getPieceColor, reverseFen } from "./fenBoardLogic";
 import "./board.css";
 
-function Board() {
+function Board({isBlackBoardSet}) {
     const fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
     
+    const [isWhiteTurn, setIsWhiteTurn] = useState(true); // [false, true] = [black, white
+    const [isBlackBoard, setIsBlackBoard] = useState(isBlackBoardSet); // [false, true] = [white, black]
+
     const [board, setBoard] = useState([]);
     const [fen, setFen] = useState(fenString);
     
+    const [letters, setLetters] = useState(["a", "b", "c", "d", "e", "f", "g", "h"]);
+    const [numbers, setNumbers] = useState([8, 7, 6, 5, 4, 3, 2, 1]);
+
     const [fromSquare, setFromSquare] = useState(null);
     const [toSquare, setToSquare] = useState(null);
 
     const [moves, setMoves] = useState([]);
 
     useEffect(() => {
+        if(isBlackBoard === false){
+            setFen(fenString);
+        }
+        else{
+            setNumbers([1, 2, 3, 4, 5, 6, 7, 8]);
+            setFen(reverseFen(fenString));
+        }
+    }, [isBlackBoard]);
+
+    useEffect(() => {
         setBoard(fenToBoard(fen));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fen]);
-
-    const letters = ["a", "b", "c", "d", "e", "f", "g", "h"];
-    const numbers = [8, 7, 6, 5, 4, 3, 2, 1];
-
-    // letters.reverse();
-    // numbers.reverse();
 
     const getPieceImage = (piece) => {
         const color = piece === piece.toUpperCase() ? "white" : "black";
