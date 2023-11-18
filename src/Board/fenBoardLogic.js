@@ -181,7 +181,7 @@ const generatePawnMoves = (board, fromSquare, numbers, letters) => {
     const row = numbers.indexOf(parseInt(fromSquare[1]));
     const col = letters.indexOf(fromSquare[0]);
 
-    if(board[row][col] === 'P'){
+    if(board[row][col] === 'P' || board[row][col] === 'p'){
         // up
         if(row - 1 >= 0 && board[row - 1][col] === null){
             moves.push(letters[col] + numbers[row - 1]);
@@ -202,28 +202,6 @@ const generatePawnMoves = (board, fromSquare, numbers, letters) => {
             moves.push(letters[col + 1] + numbers[row - 1]);
         }
     }
-    else{
-        // down
-        if(row + 1 < 8 && board[row + 1][col] === null){
-            moves.push(letters[col] + numbers[row + 1]);
-
-            // check if it's the pawn's first move and allow it to move two places forward
-            if (row === 1 && board[row + 2][col] === null) {
-                moves.push(letters[col] + numbers[row + 2]);
-            }
-        }
-
-        // down-left
-        if(row + 1 < 8 && col - 1 >= 0 && board[row + 1][col - 1] !== null && getPieceColor(board[row + 1][col - 1]) !== 'black'){
-            moves.push(letters[col - 1] + numbers[row + 1]);
-        }
-
-        // down-right
-        if(row + 1 < 8 && col + 1 < 8 && board[row + 1][col + 1] !== null && getPieceColor(board[row + 1][col + 1]) !== 'black'){
-            moves.push(letters[col + 1] + numbers[row + 1]);
-        }
-    }
-
     return moves;
 }
 

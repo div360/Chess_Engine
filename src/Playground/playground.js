@@ -4,7 +4,8 @@ import Board from '../Board/board'
 function Playground() {
     return (
         <div className='h-full w-full'>
-            <Board/>
+            <Board isBlackBoardSet={false}/>
+            <Board isBlackBoardSet={true}/>
         </div>
     )
 }
