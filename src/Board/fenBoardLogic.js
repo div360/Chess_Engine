@@ -233,7 +233,7 @@ const generateKnightMoves = (board, fromSquare, numbers, letters) => {
 }
 
 const generateKingMoves = (board, fromSquare, numbers, letters) => {
-    const moves = []
+    const moves = [];
     const row = numbers.indexOf(parseInt(fromSquare[1]));
     const col = letters.indexOf(fromSquare[0]);
 
@@ -256,10 +256,16 @@ const generateKingMoves = (board, fromSquare, numbers, letters) => {
         }
     }
 
+    // Check if castling is allowed
+    const castleMoves = castleMovesAllowed(board, fromSquare, numbers, letters);
+    moves.push(...castleMoves);
+
+    console.log('castleMoves', castleMoves)
+
     return moves;
 }
 
-const generateLegalMoves = (board, fromSquare, numbers, letters) => {
+const generateLegalMoves = (board, fromSquare, numbers, letters, kingPosition, isWhiteTurn) => {
 
     const piece = getPieceAtSquare(board, fromSquare, numbers, letters);
     const color = getPieceColor(piece);
@@ -274,7 +280,47 @@ const generateLegalMoves = (board, fromSquare, numbers, letters) => {
         return generateKnightMoves(board, fromSquare, numbers, letters);
     }
     else if(piece.toLowerCase() === 'k'){
+        if(isCheck(board, numbers, letters, kingPosition, isWhiteTurn)){
+            console.log('king is in check')
+            return [];
+        } 
+       
+        console.log('king is not in check')
         return generateKingMoves(board, fromSquare, numbers, letters);
+    }
+}
+
+const castleMovesAllowed = (board, fromSquare, numbers, letters) => {
+    const piece = getPieceAtSquare(board, fromSquare, numbers, letters);
+    const color = getPieceColor(piece);
+    const castlingMoves = [];
+
+    //To do
+
+    return castlingMoves;
+}
+
+
+const isCheck = (board, numbers, letters, kingPos, isWhiteTurn) => {
+    if(kingPos !== undefined){
+        const kingPosition = kingPos[isWhiteTurn ? "white" : "black"];
+        
+        const kingRow = numbers.indexOf(parseInt(kingPosition[1]));
+        const kingCol = letters.indexOf(kingPosition[0]);
+        
+        // Check if any opponent piece can attack the king
+        for (let row = 0; row < 8; row++) {
+            for (let col = 0; col < 8; col++) {
+                const piece = board[row][col];
+                if (piece !== null && getPieceColor(piece) !== getPieceColor(board[kingRow][kingCol])) {
+                    const moves = generateLegalMoves(board, letters[col] + numbers[row], numbers, letters);
+                    if (moves?.includes(kingPosition)) {
+                        return true;
+                    }
+                }
+            }
+        } 
+        return false;
     }
 }
 
