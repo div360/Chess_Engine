@@ -4,8 +4,12 @@ import { useNavigate } from "react-router-dom";
 function Hero(){
     const navigate = useNavigate();
 
-    const handleClick = () => {
+    const handleClickPlayground = () => {
         navigate('/playground');
+    }
+
+    const handleClickFriend = () => {
+        navigate('/invite');
     }
 
     return(
@@ -16,8 +20,8 @@ function Hero(){
                     <h1 className="font-[Poppins] text-[#fefafd] font-bold text-4xl">CHESS BRINGS GREAT IDEAS TO LIFE</h1>
                     <h1 className="font-[Athiti] text-[#fefafd] font-medium text-md text-center w-2/3 pb-6">8X8 is your one stop solution for AI based Chess engine with loaded features like video calls, timers, move history and much more ...</h1>
                     <div className="flex flex-row items-center justify-center h-12 gap-6">
-                        <button onClick={handleClick} className="hover:ring-1 ring-white bg-[#ed673b] text-[#ebebeb] font-[Athiti] font-semibold text-lg px-4 py-2 rounded-md">Play with Computer</button>
-                        <button onClick={handleClick} className="hover:ring-1 ring-[#ed673b] bg-[#fefafd] text-[#000000] font-[Athiti] font-semibold text-lg px-4 py-2 rounded-md">Play with a Friend</button>
+                        <button onClick={handleClickPlayground} className="hover:ring-1 ring-white bg-[#ed673b] text-[#ebebeb] font-[Athiti] font-semibold text-lg px-4 py-2 rounded-md">Play with Computer</button>
+                        <button onClick={handleClickFriend} className="hover:ring-1 ring-[#ed673b] bg-[#fefafd] text-[#000000] font-[Athiti] font-semibold text-lg px-4 py-2 rounded-md">Play with a Friend</button>
                     </div>
                 </div>
 

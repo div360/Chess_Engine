@@ -6,6 +6,7 @@ import Footer from './Footer/footer';
 import Header from './Header/header';
 import Hero from './Hero/hero';
 import Playground from './Playground/playground';
+import Invite from './Invite/invite';
 
 function HomePage(){
   return(
@@ -26,7 +27,8 @@ function App() {
       <Router>
           <Routes>
             <Route path="/" element={<HomePage/>} />
-            <Route path="/playground" element={<Playground/>} />
+            <Route path='/invite' element={<Invite/>} />
+            <Route path="/playground/*" element={<Playground/>} />
           </Routes>
       </Router>
     </div>

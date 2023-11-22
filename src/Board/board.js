@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import { fenToBoard, generateLegalMoves, getPieceColor, reverseFen } from "./fenBoardLogic";
 import "./board.css";
 
-function Board({isBlackBoardSet}) {
+function Board({isBlackBoardSet, isWhite}) {
     const fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
     
     const [isWhiteTurn, setIsWhiteTurn] = useState(true); // [false, true] = [black, white
@@ -37,12 +37,12 @@ function Board({isBlackBoardSet}) {
     const getPieceImage = (piece) => {
         const color = piece === piece.toUpperCase() ? "white" : "black";
         const type = piece.toLowerCase();
-        if (type === "p") return `assets/chess_pieces/pawn_${color}.png`;
-        if (type === "r") return `assets/chess_pieces/rook_${color}.png`;
-        if (type === "n") return `assets/chess_pieces/knight_${color}.png`;
-        if (type === "b") return `assets/chess_pieces/bishop_${color}.png`;
-        if (type === "q") return `assets/chess_pieces/queen_${color}.png`;
-        if (type === "k") return `assets/chess_pieces/king_${color}.png`;
+        if (type === "p") return `${process.env.PUBLIC_URL}/assets/chess_pieces/pawn_${color}.png`;
+        if (type === "r") return `${process.env.PUBLIC_URL}/assets/chess_pieces/rook_${color}.png`;
+        if (type === "n") return `${process.env.PUBLIC_URL}/assets/chess_pieces/knight_${color}.png`;
+        if (type === "b") return `${process.env.PUBLIC_URL}/assets/chess_pieces/bishop_${color}.png`;
+        if (type === "q") return `${process.env.PUBLIC_URL}/assets/chess_pieces/queen_${color}.png`;
+        if (type === "k") return `${process.env.PUBLIC_URL}/assets/chess_pieces/king_${color}.png`;
     };
 
     const handlePieceClick = (e) => {
@@ -55,6 +55,8 @@ function Board({isBlackBoardSet}) {
         else{
             if(fromSquare === null){
                 if(getPieceAtSquare(square_id) === null) return;
+                if(isBlackBoard && getPieceColor(getPieceAtSquare(square_id)) === "white") return;
+                if(isBlackBoard === false && getPieceColor(getPieceAtSquare(square_id)) === "black") return;
                 setFromSquare(square_id);
             }
             else{
@@ -142,7 +144,11 @@ function Board({isBlackBoardSet}) {
                                         id={`${letters[colIndex]}${numbers[rowIndex]}`}
                                         key={`${letters[colIndex]}${numbers[rowIndex]}`}
                                         src={getPieceImage(piece)}
-                                        className="h-17 w-17 cursor-pointer"
+                                        className={`
+                                            h-17 w-17
+                                            ${isBlackBoard && getPieceColor(piece) === "black" ? "cursor-pointer" : ""}
+                                            ${!isBlackBoard && getPieceColor(piece) === "white" ? "cursor-pointer" : ""}
+                                        `}
                                         alt={`${letters[colIndex]}${numbers[rowIndex]}_piece`}
                                     />
                                         
