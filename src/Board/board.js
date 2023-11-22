@@ -19,6 +19,8 @@ function Board({isBlackBoardSet, isWhite}) {
 
     const [moves, setMoves] = useState([]);
 
+    const [kingPosition, setKingPosition] = useState({white: "e1", black: "e8"});
+
     useEffect(() => {
         if(isBlackBoard === false){
             setFen(fenString);
@@ -84,6 +86,7 @@ function Board({isBlackBoardSet, isWhite}) {
         console.log(from_row, from_col, to_row, to_col)
 
         if (board && board[from_row] && board[from_row][from_col]) {
+
             const piece = board[from_row][from_col];
             const newBoard = [...board];
             newBoard[from_row][from_col] = null;
@@ -97,12 +100,16 @@ function Board({isBlackBoardSet, isWhite}) {
     }
 
     useEffect(() => {
+        console.log('kingPosition in useEffect', kingPosition)
+    }, [kingPosition])
+
+    useEffect(() => {
 
         console.log(fromSquare, toSquare)
         if(fromSquare === null) return;
 
         if(fromSquare !== null){
-            const moves = generateLegalMoves(board, fromSquare, numbers, letters);
+            const moves = generateLegalMoves(board, fromSquare, numbers, letters, kingPosition, isWhiteTurn)
             console.log(moves);
             if(moves !== undefined){
                 setMoves(moves);
@@ -112,6 +119,12 @@ function Board({isBlackBoardSet, isWhite}) {
         if(toSquare === null) return;
         if(moves.includes(toSquare) === false) return;
         if(fromSquare === toSquare) return;
+
+        const piece = getPieceAtSquare(fromSquare);
+
+        if(piece?.toLowerCase() === "k"){
+            setKingPosition({...kingPosition, [getPieceColor(piece)]: toSquare});
+        }
 
         movePiece(fromSquare, toSquare)
         // eslint-disable-next-line react-hooks/exhaustive-deps
