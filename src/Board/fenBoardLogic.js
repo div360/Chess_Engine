@@ -205,6 +205,45 @@ const generatePawnMoves = (board, fromSquare, numbers, letters) => {
     return moves;
 }
 
+const generatePawnExtraMoves = (board, fromSquare, numbers, letters) => {
+    const moves = []
+    const row = numbers.indexOf(parseInt(fromSquare[1]));
+    const col = letters.indexOf(fromSquare[0]);
+
+    if(board[row][col] === 'P' || board[row][col] === 'p'){
+        //down 
+        if(row + 1 < 8 && board[row + 1][col] === null){
+            moves.push(letters[col] + numbers[row + 1]);
+
+            // check if it's the pawn's first move and allow it to move two places forward
+            if (row === 1 && board[row + 2][col] === null) {
+                moves.push(letters[col] + numbers[row + 2]);
+            }
+        }
+
+        // down-left
+        if(row + 1 < 8 && col - 1 >= 0 && board[row + 1][col - 1] !== null && getPieceColor(board[row + 1][col - 1]) !== 'black'){
+            moves.push(letters[col - 1] + numbers[row + 1]);
+        }
+
+        // down-right
+        if(row + 1 < 8 && col + 1 < 8 && board[row + 1][col + 1] !== null && getPieceColor(board[row + 1][col + 1]) !== 'black'){
+            moves.push(letters[col + 1] + numbers[row + 1]);
+        }
+
+        // en passant
+        if(row === 3){
+            if(col - 1 >= 0 && board[row][col - 1] === 'p' && board[row][col - 1] === 'P'){
+                moves.push(letters[col - 1] + numbers[row + 1]);
+            }
+            if(col + 1 < 8 && board[row][col + 1] === 'p' && board[row][col + 1] === 'P'){
+                moves.push(letters[col + 1] + numbers[row + 1]);
+            }
+        }
+    }
+    return moves;
+}
+
 const generateKnightMoves = (board, fromSquare, numbers, letters) => {
     const moves = []
     const row = numbers.indexOf(parseInt(fromSquare[1]));
@@ -307,7 +346,7 @@ const isCheck = (board, numbers, letters, kingPos, isWhiteTurn) => {
         
         const kingRow = numbers.indexOf(parseInt(kingPosition[1]));
         const kingCol = letters.indexOf(kingPosition[0]);
-        
+
         // Check if any opponent piece can attack the king
         for (let row = 0; row < 8; row++) {
             for (let col = 0; col < 8; col++) {
@@ -316,6 +355,12 @@ const isCheck = (board, numbers, letters, kingPos, isWhiteTurn) => {
                     const moves = generateLegalMoves(board, letters[col] + numbers[row], numbers, letters);
                     if (moves?.includes(kingPosition)) {
                         return true;
+                    }
+                    if(piece.toLowerCase() === 'p' && getPieceColor(piece) !== getPieceColor(board[kingRow][kingCol])){
+                        const pawnMoves = generatePawnExtraMoves(board, letters[col] + numbers[row], numbers, letters);
+                        if(pawnMoves?.includes(kingPosition)){
+                            return true;
+                        }
                     }
                 }
             }

@@ -166,6 +166,8 @@ function Board({isBlackBoardSet, isWhite}) {
                                     />
                                         
                                 }
+
+                                
                                 {colIndex === 0 && <span className="absolute left-1 mb-20 h-3 w-3 font-[Poppins] font-semibold text-sm">{numbers[rowIndex]}</span>}
 
                                 {rowIndex === 7 && <span className="absolute bottom-4 ml-1 h-3 w-3 font-[Poppins] font-semibold text-sm">{letters[colIndex]}</span>}
