@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import socket from '../Socket/socket';
 
 export default function RegisterFirstUser() {
     
     const navigate = useNavigate()
 
     useEffect(() => {
-        socket.connect();
         console.log('useEffect called');
     }, []);
-
 
     const[formSubmitted, setFormSubmitted] = useState(false);
 

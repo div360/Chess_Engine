@@ -9,8 +9,14 @@ import Playground from './Playground/playground';
 import Invite from './Invite/invite';
 import RegisterFirstUser from './Register/registerFirstUser';
 import WaitingArea from './Register/waitingArea';
+import socket from './Socket/socket';
 
 function HomePage(){
+
+  useEffect(() => {
+    socket.connect();
+  }, [])
+
   return(
     <div className='h-full'>
       <Header/>
