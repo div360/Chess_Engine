@@ -9,8 +9,14 @@ import Playground from './Playground/playground';
 import Invite from './Invite/invite';
 import RegisterFirstUser from './Register/registerFirstUser';
 import WaitingArea from './Register/waitingArea';
+import socket from './Socket/socket';
 
 function HomePage(){
+
+  useEffect(() => {
+    socket.connect();
+  }, [])
+
   return(
     <div className='h-full'>
       <Header/>
@@ -29,7 +35,7 @@ function App() {
       <Router>
           <Routes>
             <Route path="/" element={<HomePage/>} />
-            <Route path="/registerfirstuser" element={<RegisterFirstUser/>} />
+            <Route path="/register" element={<RegisterFirstUser/>} />
             <Route path='/invite' element={<Invite/>} />
             <Route path="/playground/:roomid" element={<Playground/>} />
             <Route path="/waitingarea/:roomid" element={<WaitingArea/>} />
