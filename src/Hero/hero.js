@@ -9,7 +9,7 @@ function Hero(){
     }
 
     const handleClickFriend = () => {
-        navigate('/invite');
+        navigate('/registerfirstuser');
     }
 
     return(
