@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
 import ChessInfo2 from './ChessInfo2/chessInfo2';
 import ChessInfo3 from './ChessInfo3/chessInfo3';
 import ChessInfo1 from './ChessInfo_1/chessInfo1';
@@ -10,6 +11,7 @@ import Invite from './Invite/invite';
 import RegisterFirstUser from './Register/registerFirstUser';
 import WaitingArea from './Register/waitingArea';
 import socket from './Socket/socket';
+import AnimatedLoading from './Register/animatedLoading';
 
 function HomePage(){
 
@@ -37,6 +39,7 @@ function App() {
             <Route path="/" element={<HomePage/>} />
             <Route path="/register" element={<RegisterFirstUser/>} />
             <Route path='/invite' element={<Invite/>} />
+            <Route path='/animation' element={<AnimatedLoading/>} />
             <Route path="/playground/:roomid" element={<Playground/>} />
             <Route path="/waitingarea/:roomid" element={<WaitingArea/>} />
           </Routes>
