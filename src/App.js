@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useEffect } from 'react';
 import ChessInfo2 from './ChessInfo2/chessInfo2';
 import ChessInfo3 from './ChessInfo3/chessInfo3';
 import ChessInfo1 from './ChessInfo_1/chessInfo1';
