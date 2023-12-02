@@ -4,6 +4,7 @@ import SockJS from 'sockjs-client';
 import { toast, Toaster } from 'react-hot-toast';
 import copy from 'copy-to-clipboard'
 import { useNavigate } from 'react-router-dom';
+import socket from '../Socket/socket';
 
 
 export default function RegisterFirstUser() {
@@ -25,32 +26,31 @@ export default function RegisterFirstUser() {
         setUser({...user, [e.target.name]: e.target.value})
     }
 
-    const registerUser=()=>{
-            fetch('http://localhost:8080/api/generate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(user)
-            })
-            .then(response => response.json())
-            .then(data => {
-                setRoomPlayerData(data);
-                setFormSubmitted(true);
-                navigate(`/invite`, { state: { roomId: data.roomId, player1Id: data.player1Id, player2Id: data.player2Id } })
+
+    const registerUser = () => {
+        fetch('http://localhost:8080/api/generate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            socket.subscribe(`/topic/ef211d36-575f-4c46-bc30-95ee52609dfd`, (message) => {
+                console.log("Message received from server :: ", message);
             });
+            // setTimeout(() => {
+            //     socket.send(`/app/subscribe/${data.roomId}`);
+            // }, 5000);
+
+            setTimeout(() => {
+                socket.send(`/app/send/ef211d36-575f-4c46-bc30-95ee52609dfd`);
+            }, 5000);
+        })
     }
 
-    // const onConnected = () => {
-    //     stompClient.subscribe(`/user/${user.id}/queue/messages`, onMessageReceived);
-    //     stompClient.subscribe(`/user/public`, onMessageReceived);
-    // }
-
-    // async function onMessageReceived(payload) {
-    // console.log('Message received', payload);
-    // }
-
-    // const onError = (err) => {console.log(err)}
 
     return(
         <div className='h-full w-full bg-[#ffffff] flex items-center justify-center select-none'>
