@@ -1,6 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './a.css';
+import socket from '../Socket/socket';
+import { ChessContext } from '../Context/context';
+import { message } from 'antd';
 
 const quotes = [
     '"Chess is the gymnasium of the mind."',
@@ -36,14 +40,29 @@ const fadeInDown = {
 };
 
 const AnimatedLoading=()=>{
+
+    const navigate = useNavigate();
+    const {message, setMessage} = useContext(ChessContext)
+    const location = useLocation();
     const [index, setIndex] = useState(0);
+    const roomId = location?.state?.roomId === undefined ? "" : location.state.roomId;
+    const playerId = location?.state?.playerId === undefined ? "" : location.state.playerId;
+    const color = location?.state?.color === undefined ? "" : location.state.color;
 
     useEffect(() => {
+        socket.send(`/app/checkonline/${roomId}`);
       const timer = setInterval(() => {
         setIndex((current) => (current + 1) % quotes.length);
       }, 3000); // Change quote every 3 seconds
       return () => clearInterval(timer);
     }, []);
+
+
+    useEffect(() => {
+        if(message?.message?.message === "start"){
+            navigate("/playground/"+roomId, {state: {isBlackBoard:color==="white"?false:true, roomId: roomId, playerId: playerId}})
+        }
+    }, [message])
 
     return(
         <div className="p-5 text-3xl" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
