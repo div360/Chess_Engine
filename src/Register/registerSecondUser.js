@@ -33,7 +33,7 @@ function RegisterSecondUser () {
     }
 
     const handlePlayButton = () => {
-        fetch('http://localhost:8080/api/join', {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/join`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
