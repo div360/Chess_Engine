@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
-import './a.css';
-import socket from '../Socket/socket';
 import { ChessContext } from '../Context/context';
-import { message } from 'antd';
+import { motion, AnimatePresence } from 'framer-motion';
+import socket from '../Socket/socket';
+import './lobby.css';
 
 const quotes = [
     '"Chess is the gymnasium of the mind."',
@@ -17,7 +16,7 @@ const quotes = [
     '"In chess, as in life, forethought wins."',
     '"Chess, like love, like music, has the power to make men happy."',
     '"The queen is the most powerful piece on the board, but the king is indispensable."'
-  ]; // Your array of quotes
+  ];
 
 const easing = [0.6, 0.7, 0.9, 0.8];
 
@@ -33,13 +32,13 @@ const fadeInDown = {
         transition: { duration: 0.8, ease: easing }
       },
       exit: {
-        y: 0, // Keep the y position constant
+        y: 0,
         opacity: 0,
         transition: { duration: 0.8, ease: easing }
       }
 };
 
-const AnimatedLoading=()=>{
+const Lobby=()=>{
 
     const navigate = useNavigate();
     const {message, setMessage} = useContext(ChessContext)
@@ -50,17 +49,17 @@ const AnimatedLoading=()=>{
     const color = location?.state?.color === undefined ? "" : location.state.color;
 
     useEffect(() => {
-        socket.send(`/app/checkonline/${roomId}`);
+      socket.send(`/app/checkonline/${roomId}`);
       const timer = setInterval(() => {
         setIndex((current) => (current + 1) % quotes.length);
-      }, 3000); // Change quote every 3 seconds
+      }, 3000);
       return () => clearInterval(timer);
     }, []);
 
 
     useEffect(() => {
         if(message?.message?.message === "start"){
-            navigate("/playground/"+roomId, {state: {isBlackBoard:color==="white"?false:true, roomId: roomId, playerId: playerId}})
+            navigate(`/playground/${roomId}`, {state: {isBlackBoard:color?.toLowerCase()==="white"?false:true, roomId: roomId, playerId: playerId}})
         }
     }, [message])
 
@@ -80,4 +79,4 @@ const AnimatedLoading=()=>{
     )
 }
 
-export default AnimatedLoading;
+export default Lobby;

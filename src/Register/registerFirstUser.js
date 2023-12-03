@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
-import { toast, Toaster } from 'react-hot-toast';
-import copy from 'copy-to-clipboard'
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import socket from '../Socket/socket';
-
+import { ChessContext } from '../Context/context';
 
 export default function RegisterFirstUser() {
 
-    const navigate = useNavigate()
-
     const[formSubmitted, setFormSubmitted] = useState(false);
+    const {message, setMessage} = useContext(ChessContext)
+    
+    const navigate = useNavigate()
 
     const [user, setUser] = useState({
         id: 'randomId',
@@ -17,15 +16,12 @@ export default function RegisterFirstUser() {
         color: 'black',
     })
 
-    const [roomPlayerData, setRoomPlayerData] = useState();
-
     const handleInputChange = (e) => {
         setUser({...user, [e.target.name]: e.target.value})
     }
 
-
     const registerUser = () => {
-        fetch('http://localhost:8080/api/generate', {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/generate`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -34,8 +30,11 @@ export default function RegisterFirstUser() {
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
-            navigate('/invite', {state: {roomId: data.roomId, playerId: data.player1Id, player2Id: data.player2Id, player1Color: data.player1Color}})
+            socket.subscribe(`/topic/${data.roomId}`, (socket_data) => {
+                const parsedData = JSON.parse(socket_data?.body);
+                setMessage(parsedData)
+            });
+            navigate('/invite', {state: {roomId: data.roomId, playerId: data.player1Id, player2Id: data.player2Id, player1Color: data.player1Color}}, {replace: true})
         })
     }
 

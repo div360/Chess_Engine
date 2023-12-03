@@ -1,6 +1,6 @@
 .gradient-line-left3 {
     position: absolute;
-    top: 30%;
+    top: 17%;
     left: 5%;
     width: 40%;
     height: 0.1rem; 
@@ -9,7 +9,7 @@
 
 .gradient-line-right3 {
     position: absolute;
-    top: 30%;
+    top: 17%;
     right: 5%;
     width: 40%;
     height: 0.1rem; 
@@ -18,18 +18,18 @@
 
 .gradient-line-vertical-left2 {
     position: absolute;
-    top: 30%;
+    top: 17%;
     right: 5%;
     width: 0.05rem;
-    height: 50%; 
+    height: 65%; 
     background: linear-gradient(to bottom, rgb(163, 163, 163) 30%, rgb(163, 163, 163) 30%);
 }
 
 .gradient-line-vertical-right2 {
     position: absolute;
-    top: 30%;
+    top: 17%;
     left: 5%;
     width: 0.05rem;
-    height: 50%; 
+    height: 65%; 
     background: linear-gradient(to bottom, rgb(163, 163, 163) 30%, rgb(163, 163, 163) 30%);
 }

@@ -26,35 +26,17 @@ function Board({isBlackBoardSet, roomId, playerId}) {
     const [kingPosition, setKingPosition] = useState({white: "e1", black: "e8"});
 
     useEffect(() => {
-        socket.subscribe(`/topic/${roomId}`, (message1) => {
-            console.log("Message from handleplay", message1.body);
-            const parsedData = JSON.parse(message1.body);
-            setMessage(parsedData)
-        });
-    }, [])
-
-    useEffect(() => {
-        console.log(message)
-    }, [message])
-
-    useEffect(() => {
         if(isBlackBoard === false){
             setFen(fenString);
+            setBoard(fenToBoard(fenString));
         }
         else{
             setNumbers([1, 2, 3, 4, 5, 6, 7, 8]);
-            setFen(reverseFen(fenString));
+            const reversedFenString = reverseFen(fenString);
+            setFen(reversedFenString);
+            setBoard(fenToBoard(reversedFenString));
         }
-        setBoard(fenToBoard(fen))
     }, [isBlackBoard]);
-
-    useEffect(() => {
-        console.log('kingPosition in useEffect', kingPosition)
-    }, [kingPosition])
-
-    useEffect(() => {
-        setFen((prevFen) => boardToFen(board))
-    }, [board])
 
     useEffect(() => {
 
@@ -161,7 +143,7 @@ function Board({isBlackBoardSet, roomId, playerId}) {
     return (
         <div className="flex flex-col justify-center items-center h-screen font-[Athiti] font-semibold bg-[#212121]">
 
-                <input className="w-1/4" type="text" value={fen} onChange={(e) => setFen(e.target.value)} />
+                {/* <input className="w-1/4" type="text" value={fen} onChange={(e) => setFen(e.target.value)} /> */}
 
                 <div className="grid grid-cols-8 h-[800px] w-[800px] ring-8 ring-[#78784e] scale-90">
                     {board.map((row, rowIndex) =>

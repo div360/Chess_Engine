@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom'
 import { toast, Toaster } from 'react-hot-toast';
 import copy from 'copy-to-clipboard'
 import { useNavigate } from 'react-router-dom';
-import {AES} from 'crypto-js'
 import socket from '../Socket/socket';
 import {ChessContext} from '../Context/context';
 
@@ -18,11 +17,6 @@ function Invite(){
     const player2Id = location?.state?.player2Id === undefined ? "" : location?.state?.player2Id;
     const player1Color = location?.state?.player1Color === undefined ? "" : location?.state?.player1Color;
 
-    const createInviteLink = (data) => {
-        const hash = AES.encrypt(JSON.stringify(data), "8by8").toString()
-        return hash;
-    };
-
     useEffect(() => {
         setVisibleInviteLink(`http://localhost:3000/join/${roomId}/${player2Id}`)
     }, [])
@@ -33,13 +27,7 @@ function Invite(){
     }
 
     const handlePlay = () => {
-        socket.subscribe(`/topic/${roomId}`, (message1) => {
-            console.log("Message from handleplay", message1.body);
-            const parsedData = JSON.parse(message1.body);
-            setMessage(parsedData)
-        });
-        console.log(player1Color)
-        navigate('/animation', {state: {roomId: roomId, playerId: player1Id, color: player1Color}})
+        navigate('/lobby', {state: {roomId: roomId, playerId: player1Id, color: player1Color}})
     }
 
     return(

@@ -9,6 +9,10 @@ function Playground() {
     const roomId = location?.state?.roomId;
     const playerId = location?.state?.playerId;
 
+    console.log("isBlackBoard", isBlackBoard)
+    console.log("roomId", roomId)
+    console.log("playerId", playerId)
+
     return (
         <div className='h-full w-full'>
             

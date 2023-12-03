@@ -17,18 +17,18 @@ function RegisterSecondUser () {
         name: '',
         playerId: params.playerId,
     })
+    
     useEffect(() => {
         socket.connect();
       }, [])
 
     useEffect(() => {
         if(subscribe) {
-            socket.subscribe(`/topic/${params.roomId}`, (message1) => {
-                console.log("Message from handleplay", message1.body);
-                const parsedData = JSON.parse(message1.body);
+            socket.subscribe(`/topic/${params.roomId}`, (data) => {
+                const parsedData = JSON.parse(data.body);
                 setMessage(parsedData)
             });
-            navigate('/animation', {state: {roomId: params.roomId, playerId: params.playerId, color: color}})
+            navigate('/lobby', {state: {roomId: params.roomId, playerId: params.playerId, color: color}})
         }
     }, [subscribe])
 
@@ -46,7 +46,6 @@ function RegisterSecondUser () {
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             if(data.message==="Joined room successfully")
             {
                 setColor(data.player2Color)
