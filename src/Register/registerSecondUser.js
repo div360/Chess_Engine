@@ -24,10 +24,6 @@ function RegisterSecondUser () {
 
     useEffect(() => {
         if(subscribe) {
-            socket.subscribe(`/topic/${params.roomId}`, (data) => {
-                const parsedData = JSON.parse(data.body);
-                setMessage(parsedData)
-            });
             navigate('/lobby', {state: {roomId: params.roomId, playerId: params.playerId, color: color}})
         }
     }, [subscribe])

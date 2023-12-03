@@ -30,10 +30,6 @@ export default function RegisterFirstUser() {
         })
         .then(response => response.json())
         .then(data => {
-            socket.subscribe(`/topic/${data.roomId}`, (socket_data) => {
-                const parsedData = JSON.parse(socket_data?.body);
-                setMessage(parsedData)
-            });
             navigate('/invite', {state: {roomId: data.roomId, playerId: data.player1Id, player2Id: data.player2Id, player1Color: data.player1Color}}, {replace: true})
         })
     }

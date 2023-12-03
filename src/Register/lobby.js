@@ -49,6 +49,11 @@ const Lobby=()=>{
     const color = location?.state?.color === undefined ? "" : location.state.color;
 
     useEffect(() => {
+      socket.subscribe(`/topic/${roomId}`, (socket_data) => {
+        const parsedData = JSON.parse(socket_data?.body);
+        setMessage(parsedData)
+      });
+      
       socket.send(`/app/checkonline/${roomId}`);
       const timer = setInterval(() => {
         setIndex((current) => (current + 1) % quotes.length);
