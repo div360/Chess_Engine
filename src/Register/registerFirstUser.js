@@ -44,6 +44,7 @@ export default function RegisterFirstUser() {
             // }, 5000);
 
             setTimeout(() => {
+                
                 socket.send(`/app/send/ef211d36-575f-4c46-bc30-95ee52609dfd`);
             }, 5000);
         })
