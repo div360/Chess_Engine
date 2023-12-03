@@ -1,18 +1,22 @@
-import React, {useState, useEffect } from 'react'
+import React, {useState, useEffect, useContext } from 'react'
 import { useLocation } from 'react-router-dom'
 import { toast, Toaster } from 'react-hot-toast';
 import copy from 'copy-to-clipboard'
 import { useNavigate } from 'react-router-dom';
 import {AES} from 'crypto-js'
+import socket from '../Socket/socket';
+import {ChessContext} from '../Context/context';
 
 function Invite(){
+    const {message, setMessage} = useContext(ChessContext)
     const [visibleInviteLink, setVisibleInviteLink] = useState("")
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const location = useLocation();
     const roomId = location?.state?.roomId === undefined ? "" : location?.state?.roomId;
     const player1Id = location?.state?.player1Id === undefined ? "" : location?.state?.player1Id;
     const player2Id = location?.state?.player2Id === undefined ? "" : location?.state?.player2Id;
+    const player1Color = location?.state?.player1Color === undefined ? "" : location?.state?.player1Color;
 
     const createInviteLink = (data) => {
         const hash = AES.encrypt(JSON.stringify(data), "8by8").toString()
@@ -26,6 +30,16 @@ function Invite(){
     const handleCopyClick = ()=>{
         copy(visibleInviteLink)
         toast.success("Invite Link copied successfully!")
+    }
+
+    const handlePlay = () => {
+        socket.subscribe(`/topic/${roomId}`, (message1) => {
+            console.log("Message from handleplay", message1.body);
+            const parsedData = JSON.parse(message1.body);
+            setMessage(parsedData)
+        });
+        console.log(player1Color)
+        navigate('/animation', {state: {roomId: roomId, playerId: player1Id, color: player1Color}})
     }
 
     return(
@@ -47,7 +61,7 @@ function Invite(){
                     </h1>
                     <div onClick={handleCopyClick} className='hover:bg-[#2790f3] cursor-pointer font-[Poppins] font-medium text-md text-[#ffffff] py-3 px-6 rounded-lg shadow-sm bg-[#2689e6]'>Copy</div>
                 </div>
-                <div className='hover:bg-[#2790f3] mt-12 cursor-pointer font-[Poppins] font-medium text-md text-[#ffffff] py-3 px-6 w-1/5 text-center rounded-lg shadow-sm bg-[#2689e6]'>Let's Play</div>
+                <div className='hover:bg-[#2790f3] mt-12 cursor-pointer font-[Poppins] font-medium text-md text-[#ffffff] py-3 px-6 w-1/5 text-center rounded-lg shadow-sm bg-[#2689e6]' onClick={handlePlay}>Let's Play</div>
             </div>
         </div>
     )

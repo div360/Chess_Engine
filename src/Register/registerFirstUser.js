@@ -7,7 +7,6 @@ import socket from '../Socket/socket';
 
 export default function RegisterFirstUser() {
 
-    let stompClient = null;
     const navigate = useNavigate()
 
     const[formSubmitted, setFormSubmitted] = useState(false);
@@ -15,7 +14,7 @@ export default function RegisterFirstUser() {
     const [user, setUser] = useState({
         id: 'randomId',
         name: '',
-        color: '',
+        color: 'black',
     })
 
     const [roomPlayerData, setRoomPlayerData] = useState();
@@ -36,17 +35,7 @@ export default function RegisterFirstUser() {
         .then(response => response.json())
         .then(data => {
             console.log(data);
-            socket.subscribe(`/topic/ef211d36-575f-4c46-bc30-95ee52609dfd`, (message) => {
-                console.log("Message received from server :: ", message);
-            });
-            // setTimeout(() => {
-            //     socket.send(`/app/subscribe/${data.roomId}`);
-            // }, 5000);
-
-            setTimeout(() => {
-                
-                socket.send(`/app/send/ef211d36-575f-4c46-bc30-95ee52609dfd`);
-            }, 5000);
+            navigate('/invite', {state: {roomId: data.roomId, playerId: data.player1Id, player2Id: data.player2Id, player1Color: data.player1Color}})
         })
     }
 

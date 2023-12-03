@@ -5,14 +5,14 @@ import Board from '../Board/board'
 function Playground() {
     const location = useLocation()
 
-    const isWhite = location?.state?.isWhite === undefined ? false : true
-    const isCreator = location?.state?.isCreator === undefined ? false : true
-    const isBlackBoard = location?.state?.isBlackBoard === undefined ? true : false
+    const isBlackBoard = location?.state?.isBlackBoard
+    const roomId = location?.state?.roomId;
+    const playerId = location?.state?.playerId;
 
     return (
         <div className='h-full w-full'>
             
-            <Board isBlackBoardSet={isBlackBoard} isWhite={isWhite}/>
+            <Board isBlackBoardSet={isBlackBoard} roomId={roomId} playerId={playerId}/>
     
         </div>
     )

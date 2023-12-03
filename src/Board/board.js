@@ -1,9 +1,13 @@
-import React, {useState, useEffect} from "react";
-import { fenToBoard, generateLegalMoves, getPieceColor, reverseFen } from "./fenBoardLogic";
+import React, {useState, useEffect, useContext} from "react";
+import { boardToFen, fenToBoard, generateLegalMoves, getPieceColor, reverseFen } from "./fenBoardLogic";
 import "./board.css";
+import socket from "../Socket/socket";
+import { ChessContext } from "../Context/context";
 
-function Board({isBlackBoardSet, isWhite}) {
+function Board({isBlackBoardSet, roomId, playerId}) {
     const fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+
+    const {message, setMessage} = useContext(ChessContext)
     
     const [isWhiteTurn, setIsWhiteTurn] = useState(true); // [false, true] = [black, white
     const [isBlackBoard, setIsBlackBoard] = useState(isBlackBoardSet); // [false, true] = [white, black]
@@ -22,6 +26,18 @@ function Board({isBlackBoardSet, isWhite}) {
     const [kingPosition, setKingPosition] = useState({white: "e1", black: "e8"});
 
     useEffect(() => {
+        socket.subscribe(`/topic/${roomId}`, (message1) => {
+            console.log("Message from handleplay", message1.body);
+            const parsedData = JSON.parse(message1.body);
+            setMessage(parsedData)
+        });
+    }, [])
+
+    useEffect(() => {
+        console.log(message)
+    }, [message])
+
+    useEffect(() => {
         if(isBlackBoard === false){
             setFen(fenString);
         }
@@ -29,12 +45,44 @@ function Board({isBlackBoardSet, isWhite}) {
             setNumbers([1, 2, 3, 4, 5, 6, 7, 8]);
             setFen(reverseFen(fenString));
         }
+        setBoard(fenToBoard(fen))
     }, [isBlackBoard]);
 
     useEffect(() => {
-        setBoard(fenToBoard(fen));
+        console.log('kingPosition in useEffect', kingPosition)
+    }, [kingPosition])
+
+    useEffect(() => {
+        setFen((prevFen) => boardToFen(board))
+    }, [board])
+
+    useEffect(() => {
+
+        console.log(fromSquare, toSquare)
+        if(fromSquare === null) return;
+
+        if(fromSquare !== null){
+            const moves = generateLegalMoves(board, fromSquare, numbers, letters, kingPosition, isWhiteTurn)
+            console.log(moves);
+            if(moves !== undefined){
+                setMoves(moves);
+            }
+        }
+
+        if(toSquare === null) return;
+        if(moves.includes(toSquare) === false) return;
+        if(fromSquare === toSquare) return;
+
+        const piece = getPieceAtSquare(fromSquare);
+
+        if(piece?.toLowerCase() === "k"){
+            setKingPosition({...kingPosition, [getPieceColor(piece)]: toSquare});
+        }
+
+        movePiece(fromSquare, toSquare)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fen]);
+    }, [fromSquare, toSquare]);
+
 
     const getPieceImage = (piece) => {
         const color = piece === piece.toUpperCase() ? "white" : "black";
@@ -93,42 +141,22 @@ function Board({isBlackBoardSet, isWhite}) {
             newBoard[to_row][to_col] = piece;
             setBoard(newBoard);
         }
-
+        
+        var fenToSend = boardToFen(board)
+        var messageToSend = {
+            messageId:1,
+            roomId: roomId,
+            senderId: playerId,
+            message: {
+                fen: fenToSend
+            },
+            timestamp: new Date().getTime()
+        }
+        socket.send(`/app/move/${roomId}`, {}, JSON.stringify(messageToSend));
         setFromSquare(null);
         setToSquare(null);
         setMoves([]);
     }
-
-    useEffect(() => {
-        console.log('kingPosition in useEffect', kingPosition)
-    }, [kingPosition])
-
-    useEffect(() => {
-
-        console.log(fromSquare, toSquare)
-        if(fromSquare === null) return;
-
-        if(fromSquare !== null){
-            const moves = generateLegalMoves(board, fromSquare, numbers, letters, kingPosition, isWhiteTurn)
-            console.log(moves);
-            if(moves !== undefined){
-                setMoves(moves);
-            }
-        }
-
-        if(toSquare === null) return;
-        if(moves.includes(toSquare) === false) return;
-        if(fromSquare === toSquare) return;
-
-        const piece = getPieceAtSquare(fromSquare);
-
-        if(piece?.toLowerCase() === "k"){
-            setKingPosition({...kingPosition, [getPieceColor(piece)]: toSquare});
-        }
-
-        movePiece(fromSquare, toSquare)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fromSquare, toSquare]);
 
     return (
         <div className="flex flex-col justify-center items-center h-screen font-[Athiti] font-semibold bg-[#212121]">
