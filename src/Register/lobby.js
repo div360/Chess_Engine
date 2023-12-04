@@ -69,8 +69,8 @@ const Lobby=()=>{
         }
         // for new move
         if(code === 200){
-          const { message } = parsedData;
-          setMessage({code: 200, roomId: roomId, from: message?.from, to: message?.to})
+          const { message, senderId } = parsedData;
+          setMessage({code: 200, roomId: roomId, from: message?.from, to: message?.to, senderId: senderId})
         }
         // for subscribed to room
         if(code === 300){

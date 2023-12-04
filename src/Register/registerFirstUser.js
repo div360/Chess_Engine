@@ -27,7 +27,7 @@ export default function RegisterFirstUser() {
         })
         .then(response => response.json())
         .then(data => {
-            navigate('/invite', {state: {roomId: data.roomId, playerId: data.player1Id, player2Id: data.player2Id, player1Color: data.player1Color}}, {replace: true})
+            navigate('/invite', {state: {roomId: data.roomId, player1Id: data.player1Id, player2Id: data.player2Id, player1Color: data.player1Color}}, {replace: true})
         })
     }
 
