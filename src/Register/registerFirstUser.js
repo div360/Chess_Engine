@@ -1,12 +1,9 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import socket from '../Socket/socket';
-import { ChessContext } from '../Context/context';
 
 export default function RegisterFirstUser() {
 
     const[formSubmitted, setFormSubmitted] = useState(false);
-    const {message, setMessage} = useContext(ChessContext)
     
     const navigate = useNavigate()
 

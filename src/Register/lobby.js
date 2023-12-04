@@ -48,13 +48,38 @@ const Lobby=()=>{
     const playerId = location?.state?.playerId === undefined ? "" : location.state.playerId;
     const color = location?.state?.color === undefined ? "" : location.state.color;
 
+    const dict = {
+      100: "Start Game",
+      200: "New Move",
+      300: "Subscribed to Room"
+    }
+
+
     useEffect(() => {
       socket.subscribe(`/topic/${roomId}`, (socket_data) => {
         const parsedData = JSON.parse(socket_data?.body);
-        setMessage(parsedData)
+        console.log(parsedData)
+
+        const code = parsedData?.code;
+
+        // for start game
+        if(code === 100){
+          const { message } = parsedData;
+          setMessage({code: 100, roomId: roomId, message: message?.message})
+        }
+        // for new move
+        if(code === 200){
+          const { message } = parsedData;
+          setMessage({code: 200, roomId: roomId, from: message?.from, to: message?.to})
+        }
+        // for subscribed to room
+        if(code === 300){
+          const { message } = parsedData;
+          setMessage({code: 300, roomId: roomId, message: message?.message})
+        }
+        
       });
       
-      socket.send(`/app/checkonline/${roomId}`);
       const timer = setInterval(() => {
         setIndex((current) => (current + 1) % quotes.length);
       }, 3000);
@@ -63,7 +88,7 @@ const Lobby=()=>{
 
 
     useEffect(() => {
-        if(message?.message?.message === "start"){
+        if(message?.code === 100){
             navigate(`/playground/${roomId}`, {state: {isBlackBoard:color?.toLowerCase()==="white"?false:true, roomId: roomId, playerId: playerId}})
         }
     }, [message])

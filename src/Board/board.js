@@ -126,19 +126,52 @@ function Board({isBlackBoardSet, roomId, playerId}) {
         
         var fenToSend = boardToFen(board)
         var messageToSend = {
-            messageId:1,
+            code: 200,
+            messageId : "randomId",
             roomId: roomId,
             senderId: playerId,
             message: {
-                fen: fenToSend
+                fen_string: fenToSend, 
+                to: to,
+                from: from
             },
             timestamp: new Date().getTime()
         }
-        socket.send(`/app/move/${roomId}`, {}, JSON.stringify(messageToSend));
+        socket.send(`/app/move/${roomId}`, messageToSend);
+
         setFromSquare(null);
         setToSquare(null);
         setMoves([]);
     }
+
+    const movePeiceFromOpponent = (from, to) => {
+        const from_row = numbers.indexOf(parseInt(from[1]));
+        const from_col = letters.indexOf(from[0]);
+        const to_row = numbers.indexOf(parseInt(to[1]));
+        const to_col = letters.indexOf(to[0]);
+
+        console.log(from_row, from_col, to_row, to_col)
+
+        if (board && board[from_row] && board[from_row][from_col]) {
+
+            const piece = board[from_row][from_col];
+            const newBoard = [...board];
+            newBoard[from_row][from_col] = null;
+            newBoard[to_row][to_col] = piece;
+            setBoard(newBoard);
+        }
+        
+        setFromSquare(null);
+        setToSquare(null);
+        setMoves([]);
+    }
+
+    useEffect(() => {
+        if(message?.code === 200){
+            console.log("message from socket in board", message)
+            movePeiceFromOpponent(message?.from, message?.to)
+        }
+    }, [message]);
 
     return (
         <div className="flex flex-col justify-center items-center h-screen font-[Athiti] font-semibold bg-[#212121]">
