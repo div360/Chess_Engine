@@ -1,12 +1,10 @@
 import React from "react";
-import { useState, useEffect, useContext } from "react"
+import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import socket from "../Socket/socket";
-import { ChessContext } from "../Context/context";
 
 function RegisterSecondUser () {
 
-    const {message, setMessage} = useContext(ChessContext)
     const navigate = useNavigate();
     const params = useParams();
     const [subscribe, setSubscribe] = useState(false)
