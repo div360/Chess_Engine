@@ -180,6 +180,7 @@ const generatePawnMoves = (board, fromSquare, numbers, letters) => {
     const moves = []
     const row = numbers.indexOf(parseInt(fromSquare[1]));
     const col = letters.indexOf(fromSquare[0]);
+    const color = getPieceColor(board[row][col]);
 
     if(board[row][col] === 'P' || board[row][col] === 'p'){
         // up
@@ -193,12 +194,12 @@ const generatePawnMoves = (board, fromSquare, numbers, letters) => {
         }
 
         // up-left
-        if(row - 1 >= 0 && col - 1 >= 0 && board[row - 1][col - 1] !== null && getPieceColor(board[row - 1][col - 1]) !== 'white'){
+        if(row - 1 >= 0 && col - 1 >= 0 && board[row - 1][col - 1] !== null && getPieceColor(board[row - 1][col - 1]) !== color){
             moves.push(letters[col - 1] + numbers[row - 1]);
         }
 
         // up-right
-        if(row - 1 >= 0 && col + 1 < 8 && board[row - 1][col + 1] !== null && getPieceColor(board[row - 1][col + 1]) !== 'white'){
+        if(row - 1 >= 0 && col + 1 < 8 && board[row - 1][col + 1] !== null && getPieceColor(board[row - 1][col + 1]) !== color){
             moves.push(letters[col + 1] + numbers[row - 1]);
         }
     }
