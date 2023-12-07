@@ -5,6 +5,7 @@ import copy from 'copy-to-clipboard'
 import { useNavigate } from 'react-router-dom';
 import socket from '../Socket/socket';
 import {ChessContext} from '../Context/context';
+import ChessAnimation2 from '../Register/chessAnimation2';
 
 function Invite(){
     const {message, setMessage} = useContext(ChessContext)
@@ -38,7 +39,8 @@ function Invite(){
 
         <div className="h-full w-full bg-[#ffffff] flex items-center justify-center select-none">
             <Toaster position="top-center" reverseOrder={false}/> 
-            <div className='flex flex-col items-center justify-center w-5/12 h-2/5 bg-black'>
+            <ChessAnimation2/>
+            <div className='flex flex-col items-center justify-center w-5/12 h-2/5 bg-black z'>
                 <div className='flex flex-col items-center py-2 justify-start relative bg-white w-full h-full bottom-5 right-5 border-black border-2'>
                     <h1 className='font-[Monoton] text-black text-[320%]'>8 X 8</h1>
                     <h1 className='font-[Athiti] text-black text-xl font-bold mt-5'>Click on Generate to create a new chess room</h1>

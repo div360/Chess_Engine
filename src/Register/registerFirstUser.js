@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ChessAnimation2 from './chessAnimation2';
 
 export default function RegisterFirstUser() {
     
@@ -35,8 +36,9 @@ export default function RegisterFirstUser() {
 
 
     return(
-        <div className="h-full w-full bg-[#ffffff] flex items-center justify-center select-none">
-            <div className='flex flex-col items-center justify-center w-1/3 h-3/5 bg-black'>
+        <div className="h-full w-full bg-[#ffffff] flex items-center justify-center select-none ">
+            <ChessAnimation2/>
+            <div className='flex flex-col items-center justify-center w-1/3 h-3/5 bg-black z-10'>
                 <div className='flex flex-col items-center py-2 justify-start relative bg-white w-full h-full bottom-5 right-5 border-black border-2'>
                     <h1 className='font-[Monoton] text-black text-[320%]'>8 X 8</h1>
                     <h1 className='font-[Athiti] text-black text-xl font-bold mt-5'>Click on Generate to create a new chess room</h1>
@@ -60,6 +62,7 @@ export default function RegisterFirstUser() {
                     <button onClick={registerUser} className='ring-1 ring-black text-xl text-center px-10 py-1 mt-12 font-[Athiti] hover:text-white hover:bg-black ease-in-out duration-200 delay-75'>Generate</button>
                 </div>
             </div>
+            
         </div>
     )
 }

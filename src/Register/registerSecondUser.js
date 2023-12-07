@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import socket from "../Socket/socket";
+import ChessAnimation2 from "./chessAnimation2";
 
 function RegisterSecondUser () {
 
@@ -52,26 +53,9 @@ function RegisterSecondUser () {
     }
 
     return(
-        // <div className='h-full w-full bg-[#ffffff] flex items-center justify-center select-none'>
-        //         <div className='flex flex-col items-center justify-start min-h-[80%] container h-max'>
-        //          <div className='flex flex-row items-center justify-center gap-3'>
-        //              <img src="assets/bg_assets/logo.svg" alt="" />
-        //              <h1 className='font-[Athiti] font-semibold text-3xl text-[#212121]'>
-        //                  Form
-        //              </h1>
-        //          </div>
-        //          <h1 className='font-[Athiti] font-semibold text-2xl text-[#212121]'>
-        //              Enter your details
-        //          </h1>
-        //          <div className='flex flex-col mt-12 items-center justify-center h-48 w-2/3 bg-[#ffffff] shadow-lg rounded-lg gap-12 ring-1 ring-orange-400'>
-        //              <input type='text' name='name' placeholder='Enter your name' className='font-[Poppins] font-medium text-sm text-[#212121] py-5 px-5 line-clamp-1 bg-slate-100 rounded-lg' onChange={handleInputChange}/>
-        //          </div>
-        //          <div className='hover:bg-[#2790f3] mt-12 cursor-pointer font-[Poppins] font-medium text-md text-[#ffffff] py-3 px-6 w-1/5 text-center rounded-lg shadow-sm bg-[#2689e6]' onClick={handlePlayButton}  >Let's Play</div>
-        //      </div>
-        // </div>
-
         <div className="h-full w-full bg-[#ffffff] flex items-center justify-center select-none">
-            <div className='flex flex-col items-center justify-center w-1/3 h-2/5 bg-black'>
+            <ChessAnimation2/>
+            <div className='flex flex-col items-center justify-center w-1/3 h-2/5 bg-black z-10'>
                 <div className='flex flex-col items-center py-2 justify-start relative bg-white w-full h-full bottom-5 right-5 border-black border-2'>
                     <h1 className='font-[Monoton] text-black text-[320%]'>8 X 8</h1>
                     <h1 className='font-[Athiti] text-black text-xl font-bold mt-5'>Click on Join to enter the chess room</h1>
