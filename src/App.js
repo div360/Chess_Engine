@@ -48,6 +48,7 @@ function App() {
             <Route path='/lobby' element={<Lobby/>} />
             <Route path="/playground/:roomid" element={<Playground/>} />
             <Route path="/waitingarea/:roomid" element={<WaitingArea/>} />
+            <Route path="*" element={<h1>404 Not Found</h1>} />
           </Routes>
       </Router>
     </div>
