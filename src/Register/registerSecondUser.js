@@ -55,7 +55,7 @@ function RegisterSecondUser () {
     return(
         <div className="h-full w-full bg-[#ffffff] flex items-center justify-center select-none">
             <ChessAnimation2/>
-            <div className='flex flex-col items-center justify-center w-1/3 h-2/5 bg-black'>
+            <div className='flex flex-col items-center justify-center w-1/3 h-2/5 bg-black z-10'>
                 <div className='flex flex-col items-center py-2 justify-start relative bg-white w-full h-full bottom-5 right-5 border-black border-2'>
                     <h1 className='font-[Monoton] text-black text-[320%]'>8 X 8</h1>
                     <h1 className='font-[Athiti] text-black text-xl font-bold mt-5'>Click on Join to enter the chess room</h1>
