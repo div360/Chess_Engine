@@ -1,16 +1,14 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function RegisterFirstUser() {
-
-    const[formSubmitted, setFormSubmitted] = useState(false);
     
     const navigate = useNavigate()
 
     const [user, setUser] = useState({
         id: 'randomId',
         name: '',
-        color: 'black',
+        color: '',
     })
 
     const handleInputChange = (e) => {
@@ -18,41 +16,50 @@ export default function RegisterFirstUser() {
     }
 
     const registerUser = () => {
-        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/generate`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(user)
-        })
-        .then(response => response.json())
-        .then(data => {
-            navigate('/invite', {state: {roomId: data.roomId, player1Id: data.player1Id, player2Id: data.player2Id, player1Color: data.player1Color}}, {replace: true})
-        })
+        if(user.name.trim().length === 0 || user.color.trim().length === 0) return;
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/api/generate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            })
+            .then(response => response.json())
+            .then(data => {
+                navigate('/invite', {state: {roomId: data.roomId, player1Id: data.player1Id, player2Id: data.player2Id, player1Color: data.player1Color}}, {replace: true})
+            })
+            .catch(error => {
+                console.log(error)
+            })
     }
 
 
     return(
-        <div className='h-full w-full bg-[#ffffff] flex items-center justify-center select-none'>
-                <div className='flex flex-col items-center justify-start min-h-[80%] container h-max'>
-                 <div className='flex flex-row items-center justify-center gap-3'>
-                     <img onMouseDown={(e)=>e.preventDefault()} src='assets/bg_assets/logo.svg' alt='logo' className='h-10 w-10 my-12'/>
-                     <h1 className='font-[Athiti] font-semibold text-3xl text-[#212121]'>
-                         Form
-                     </h1>
-                 </div>
-                 <h1 className='font-[Athiti] font-semibold text-2xl text-[#212121]'>
-                     Enter your details
-                 </h1>
-                 <div className='flex flex-col mt-12 items-center justify-center h-48 w-2/3 bg-[#ffffff] shadow-lg rounded-lg gap-12 ring-1 ring-orange-400'>
-                     <input disabled={formSubmitted} type='text' name='name' placeholder='Enter your name' className='font-[Poppins] font-medium text-sm text-[#212121] py-5 px-5 line-clamp-1 bg-slate-100 rounded-lg' onChange={handleInputChange}/>
-                     <select disabled={formSubmitted} name='color' className='font-[Poppins] font-medium text-sm text-[#212121] py-5 px-5 line-clamp-1 bg-slate-100 rounded-lg' onChange={handleInputChange}>
-                         <option value='black'>Black</option>
-                         <option value='white'>White</option>
-                     </select>
-                 </div>
-                 <div className='hover:bg-[#2790f3] mt-12 cursor-pointer font-[Poppins] font-medium text-md text-[#ffffff] py-3 px-6 w-1/5 text-center rounded-lg shadow-sm bg-[#2689e6]' onClick={registerUser} >Generate</div>
-             </div>
+        <div className="h-full w-full bg-[#ffffff] flex items-center justify-center select-none">
+            <div className='flex flex-col items-center justify-center w-1/3 h-3/5 bg-black'>
+                <div className='flex flex-col items-center py-2 justify-start relative bg-white w-full h-full bottom-5 right-5 border-black border-2'>
+                    <h1 className='font-[Monoton] text-black text-[320%]'>8 X 8</h1>
+                    <h1 className='font-[Athiti] text-black text-xl font-bold mt-5'>Click on Generate to create a new chess room</h1>
+                    <div className='flex flex-row items-center justify-center w-4/5 h-max mt-10'>
+                        <h1 className='bg-black text-white font-[Poppins] text-lg py-3 px-10 text-center w-1/3 ring-1 ring-black'>Name</h1>
+                        <input type='text' name='name' placeholder='Enter your name' className='font-[Poppins] font-medium text-lg ring-1 ring-black text-[#212121] py-3 px-5 w-2/3 line-clamp-1 bg-slate-200 outline-none' onChange={handleInputChange}/>
+                    </div>
+                    <span className='py-2 w-[97%] bg-slate-200 mt-12 text-black font-[Athiti] text-lg font-bold text-center'>Choose Your Color</span>
+
+                    <div className='flex flex-row items-center justify-center w-4/5 h-max mt-10'>
+                        <div onClick={(e)=>setUser({...user, color:'white'})} className={`flex flex-row items-center justify-center w-1/2 h-max py-1 bg-black ring-1 ring-black gap-3 hover:w-full ${user.color==='white' ? "w-full" : ""} ease-in-out duration-500 delay-75 cursor-pointer`}>
+                            <img src='assets\bg_assets\pawn_white.svg' alt='pawn' className='h-[40px] rotate-12 '/>
+                            <h1 className='font-[Abril]  font-semibold tracking-wider text-white text-2xl py-3 text-left '>White</h1>
+                        </div>
+
+                        <div onClick={(e)=>setUser({...user, color:'black'})} className={`flex flex-row items-center justify-center w-1/2 h-max py-1 bg-white ring-1 ring-black gap-3 hover:w-full ${user.color==='black' ? "w-full" : ""} ease-in-out duration-500 delay-75 cursor-pointer`}>
+                            <h1 className='font-[Abril] font-semibold tracking-wider text-black text-2xl py-3 text-center'>Black</h1>
+                            <img src='assets\bg_assets\pawn_black.svg' alt='pawn' className='h-[40px] -rotate-12'/>
+                        </div>
+                    </div>
+                    <button onClick={registerUser} className='ring-1 ring-black text-xl text-center px-10 py-1 mt-12 font-[Athiti] hover:text-white hover:bg-black ease-in-out duration-200 delay-75'>Generate</button>
+                </div>
             </div>
+        </div>
     )
 }

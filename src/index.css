@@ -17,6 +17,11 @@
     src: url('../public/fonts/Athiti-Regular.ttf');
 }
 
+@font-face {
+    font-family: 'Monoton';
+    src: url('../public/fonts/Monoton-Regular.ttf');
+}
+
 
 .link-underline {
     border-bottom-width: 0;
