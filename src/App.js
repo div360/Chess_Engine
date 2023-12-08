@@ -40,7 +40,7 @@ function App() {
     <div className="h-[100vh] bg-black">
       <Router>
           <Routes>
-            <Route path="/" element={<HomePage/>} />
+            <Route path="/" element={<NewHome/>} />
             <Route path="/register" element={<RegisterFirstUser/>} />
             <Route path='/invite' element={<Invite/>} />
             <Route path='/join/:roomId/:playerId' element={<RegisterSecondUser/>} />
