@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ChessInfo2 from './ChessInfo2/chessInfo2';
-import ChessInfo3 from './ChessInfo3/chessInfo3';
-import ChessInfo1 from './ChessInfo_1/chessInfo1';
-import Footer from './Footer/footer';
-import Hero from './Hero/hero';
 import Playground from './Playground/playground';
 import Invite from './Invite/invite';
 import RegisterFirstUser from './Register/registerFirstUser';
@@ -12,28 +7,23 @@ import WaitingArea from './Register/waitingArea';
 import socket from './Socket/socket';
 import Lobby from './Register/lobby';
 import RegisterSecondUser from './Register/registerSecondUser';
-import {ChessContext} from './Context/context';
+import {ChessContext, ChessUtilsContext} from './Context/context';
 import NewHome from './NewHome/newHome';
 import VideoCall from './VideoCall/videoCall';
 
-function HomePage(){
-
-  return(
-      <div className='h-full'>
-        <Hero/>
-        <ChessInfo1/>
-        <ChessInfo2/>
-        <ChessInfo3/>
-        <Footer/>
-      </div>
-  )
-}
 
 function App() {
-  const [message, setMessage] = useState('null')
+  const [message, setMessage] = useState(null)
+  const [chessUtils, setChessUtils] = useState({bg:"bg-[#990000]", ring:"ring-[#990000]", text:"text-[#990000]", border:"border-[#990000]", bgHover:"hover:bg-[#990000]"})
+
 
   useEffect(() => {
     socket.connect();
+
+    setTimeout(() => {
+      setChessUtils({...chessUtils, bg: "bg-[#006600]", ring: "ring-[#006600]", text: "text-[#006600]", border: "border-[#006600]", bgHover: "hover:bg-[#006600]"})
+    }, 5000);
+
   }, [])
   
   return (

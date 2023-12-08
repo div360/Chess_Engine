@@ -74,8 +74,8 @@ export default function NewHome() {
                         <div className='text-5xl font-century-gothic font-bold tracking-widest'>MOVE</div>
                     <img src="./chessfront.svg" className='mt-10 h-52 mb-24' />
                     <div className='w-full flex flex-col justify-center items-center gap-16'>
-                        <ThemeButton text={"Play with Friends"}/>
-                        <ThemeButton text={"Play with Computer"}/>
+                        <ThemeButton redirect={"/register"} text={"Play with Friends"}/>
+                        <ThemeButton redirect={"/register"} text={"Play with Computer"}/>
                     </div>
                 </div>
             </div>

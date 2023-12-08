@@ -5,8 +5,10 @@ import copy from 'copy-to-clipboard'
 import { useNavigate } from 'react-router-dom';
 import ChessAnimation from '../Register/chessAnimation';
 import { IoIosArrowRoundForward  } from "react-icons/io";
+import { ChessUtilsContext } from '../Context/context';
 
 function Invite(){
+    const {chessUtils} = useContext(ChessUtilsContext);
     const [visibleInviteLink, setVisibleInviteLink] = useState("")
     const [inviteLinkShort, setInviteLinkShort] = useState("")
     const navigate = useNavigate();
@@ -39,16 +41,16 @@ function Invite(){
         <div className="h-full w-full bg-[#ffffff] flex items-center justify-center select-none">
             <Toaster position="top-center" reverseOrder={false}/> 
             <ChessAnimation/>
-            <div className='flex flex-col items-center justify-center w-5/12 h-2/5 bg-black'>
-                <div className='flex flex-col items-center py-2 justify-start relative bg-white w-full h-full bottom-5 right-5 border-black border-4'>
-                    <h1 className='font-[Monoton] text-black text-[320%]'>8 X 8</h1>
-                    <h1 className='font-century-gothic text-black text-xl font-bold mt-5'>Click on Generate to create a new chess room</h1>
+            <div className={`flex flex-col items-center justify-center w-5/12 h-2/5 ${chessUtils?.bg} z-10`}>
+                <div className={`flex flex-col items-center py-2 justify-start relative bg-white w-full h-full bottom-5 right-5 ${chessUtils?.border} border-4`}>
+                    <h1 className={`font-[Monoton] ${chessUtils?.text} text-[320%]`}>8 X 8</h1>
+                    <h1 className={`font-century-gothic ${chessUtils?.text} text-xl font-bold mt-5`}>Click on Generate to create a new chess room</h1>
                     <div className='flex flex-row items-center justify-center w-[90%] h-max mt-10'>
-                        <div className='font-[Poppins] font-medium text-lg ring-1 ring-black text-[#212121] py-3 px-5 w-[80%] bg-slate-200 outline-none'>{inviteLinkShort}</div>
-                        <div onClick={handleCopyClick} className='bg-black text-white font-[Poppins] text-lg py-3 px-10 text-center w-[20%] ring-1 ring-black cursor-pointer hover:scale-105 ease-in-out duration-200 delay-75'>Copy</div>
+                        <div className={`font-[Poppins] font-medium text-lg ring-1 ${chessUtils.ring} ${chessUtils.text} py-3 px-5 w-[80%] bg-slate-200 outline-none`}>{inviteLinkShort}</div>
+                        <div onClick={handleCopyClick} className={`${chessUtils.bg} text-white font-[Poppins] text-lg py-3 px-10 text-center w-[20%] ring-1 ${chessUtils.ring} cursor-pointer hover:scale-105 ease-in-out duration-200 delay-75`}>Copy</div>
                     </div>
             
-                    <button onClick={handlePlay} className='ring-1 ring-black text-xl  text-center px-10 py-1 mt-12 font-bold hover:text-white hover:bg-black ease-in-out duration-200 delay-75 flex flex-row items-center'>Let's Play <IoIosArrowRoundForward  size={40}/> </button>
+                    <button onClick={handlePlay} className={`ring-1 ${chessUtils?.ring} text-xl text-center px-10 py-1 mt-12 font-bold ${chessUtils?.text} hover:text-white ${chessUtils?.bgHover} ease-in-out duration-200 delay-75 flex flex-row items-center`}>Let's Play <IoIosArrowRoundForward  size={40}/> </button>
                 </div>
             </div>
         </div>
