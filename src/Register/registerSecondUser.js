@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import socket from "../Socket/socket";
-import ChessAnimation2 from "./chessAnimation2";
+import ChessAnimation from "./chessAnimation";
 
 function RegisterSecondUser () {
 
@@ -54,7 +54,7 @@ function RegisterSecondUser () {
 
     return(
         <div className="h-full w-full bg-[#ffffff] flex items-center justify-center select-none">
-            <ChessAnimation2/>
+            <ChessAnimation/>
             <div className='flex flex-col items-center justify-center w-1/3 h-2/5 bg-black z-10'>
                 <div className='flex flex-col items-center py-2 justify-start relative bg-white w-full h-full bottom-5 right-5 border-black border-2'>
                     <h1 className='font-[Monoton] text-black text-[320%]'>8 X 8</h1>
