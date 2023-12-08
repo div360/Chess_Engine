@@ -14,12 +14,12 @@ import socket from './Socket/socket';
 import AnimatedLoading from './Register/animatedLoading';
 import RegisterSecondUser from './Register/registerSecondUser';
 import {ChessContext} from './Context/context';
+import NewHome from './NewHome/newHome';
 
 function HomePage(){
 
   return(
       <div className='h-full'>
-        <Header/>
         <Hero/>
         <ChessInfo1/>
         <ChessInfo2/>
@@ -30,7 +30,7 @@ function HomePage(){
 }
 
 function App() {
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState('null')
 
   useEffect(() => {
     socket.connect();
@@ -52,6 +52,7 @@ function App() {
             <Route path='/animation' element={<AnimatedLoading/>} />
             <Route path="/playground/:roomid" element={<Playground/>} />
             <Route path="/waitingarea/:roomid" element={<WaitingArea/>} />
+            <Route path="/new-home" element={<NewHome/>} />
           </Routes>
       </Router>
     </div>

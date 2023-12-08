@@ -26,7 +26,7 @@ function ChessInfo1() {
             </div>
 
             <div className='flex flex-col items-center justify-start pt-16 h-full w-2/3'>
-                <img onMouseDown={(e)=>e.preventDefault()} src='assets/bg_assets/chess_pieces.jpg' alt='chess pieces' className='h-[100%] w-[60%] object-contain'/>
+                <img onMouseDown={(e)=>e.preventDefault()} src='assets/bg_assets/chessline.png' alt='chess pieces' className='h-[100%] w-[60%] object-contain'/>
             </div>
 
         </div>
