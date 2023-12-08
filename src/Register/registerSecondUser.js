@@ -56,15 +56,15 @@ function RegisterSecondUser () {
         <div className="h-full w-full bg-[#ffffff] flex items-center justify-center select-none">
             <ChessAnimation/>
             <div className='flex flex-col items-center justify-center w-1/3 h-2/5 bg-black z-10'>
-                <div className='flex flex-col items-center py-2 justify-start relative bg-white w-full h-full bottom-5 right-5 border-black border-2'>
+                <div className='flex flex-col items-center py-2 justify-start relative bg-white w-full h-full bottom-5 right-5 border-black border-4'>
                     <h1 className='font-[Monoton] text-black text-[320%]'>8 X 8</h1>
-                    <h1 className='font-[Athiti] text-black text-xl font-bold mt-5'>Click on Join to enter the chess room</h1>
+                    <h1 className='font-century-gothic text-black text-xl font-bold mt-5'>Click on Join to enter the chess room</h1>
                     <div className='flex flex-row items-center justify-center w-4/5 h-max mt-10'>
                         <h1 className='bg-black text-white font-[Poppins] text-lg py-3 px-10 text-center w-1/3 ring-1 ring-black'>Name</h1>
                         <input type='text' name='name' placeholder='Enter your name' className='font-[Poppins] font-medium text-lg ring-1 ring-black text-[#212121] py-3 px-5 w-2/3 line-clamp-1 bg-slate-200 outline-none' onChange={handleInputChange}/>
                     </div>
                    
-                    <button onClick={handlePlayButton} className='ring-1 ring-black text-xl text-center px-10 py-1 mt-12 font-[Athiti] hover:text-white hover:bg-black ease-in-out duration-200 delay-75'>Join</button>
+                    <button onClick={handlePlayButton} className='ring-1 ring-black text-xl text-center px-10 py-1 mt-12 font-medium font-century-gothic hover:text-white hover:bg-black ease-in-out duration-200 delay-75'>Join</button>
                 </div>
             </div>
         </div>
