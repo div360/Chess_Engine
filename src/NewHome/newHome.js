@@ -1,4 +1,3 @@
-
 import ThemeButton from '../Button/themebutton'
 
 export default function NewHome() {
