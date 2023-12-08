@@ -50,13 +50,13 @@ export default function RegisterFirstUser() {
 
                     <div className='flex flex-row items-center justify-center w-4/5 h-max mt-10'>
                         <div onClick={(e)=>setUser({...user, color:'white'})} className={`flex flex-row items-center justify-center w-1/2 h-max py-1 bg-black ring-1 ring-black gap-3 hover:w-full ${user.color==='white' ? "w-full" : ""} ease-in-out duration-500 delay-75 cursor-pointer`}>
-                            <img src='assets\bg_assets\pawn_white.svg' alt='pawn' className='h-[40px] rotate-12 '/>
+                            <img src='assets\bg_assets\pawn_white.png' alt='pawn' className='h-[40px] rotate-12 '/>
                             <h1 className='font-[Holtwood] font-medium tracking-wider text-white text-2xl py-3 text-left '>White</h1>
                         </div>
 
                         <div onClick={(e)=>setUser({...user, color:'black'})} className={`flex flex-row items-center justify-center w-1/2 h-max py-1 bg-white ring-1 ring-black gap-3 hover:w-full ${user.color==='black' ? "w-full" : ""} ease-in-out duration-500 delay-75 cursor-pointer`}>
                             <h1 className='font-[Holtwood] font-medium tracking-wider text-black text-2xl py-3 text-center'>Black</h1>
-                            <img src='assets\bg_assets\pawn_black.svg' alt='pawn' className='h-[40px] -rotate-12'/>
+                            <img src='assets\bg_assets\pawn_black.png' alt='pawn' className='h-[40px] -rotate-12'/>
                         </div>
                     </div>
                     <button onClick={registerUser} className='ring-1 ring-black text-xl font-medium text-center px-10 py-1 mt-12 font-century-gothic hover:text-white hover:bg-black ease-in-out duration-200 delay-75'>Generate</button>
