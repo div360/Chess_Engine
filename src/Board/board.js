@@ -9,8 +9,10 @@ function Board({isBlackBoardSet, roomId, playerId}) {
 
     const {message, setMessage} = useContext(ChessContext)
     
-    const [isWhiteTurn, setIsWhiteTurn] = useState(true); // [false, true] = [black, white
+    const piece_color = isBlackBoardSet ? "black" : "white";
+
     const [isBlackBoard, setIsBlackBoard] = useState(isBlackBoardSet); // [false, true] = [white, black]
+    const [moveCount, setMoveCount] = useState(0);
 
     const [board, setBoard] = useState([]);
     const [fen, setFen] = useState(fenString);
@@ -26,35 +28,17 @@ function Board({isBlackBoardSet, roomId, playerId}) {
     const [kingPosition, setKingPosition] = useState({white: "e1", black: "e8"});
 
     useEffect(() => {
-        socket.subscribe(`/topic/${roomId}`, (message1) => {
-            console.log("Message from handleplay", message1.body);
-            const parsedData = JSON.parse(message1.body);
-            setMessage(parsedData)
-        });
-    }, [])
-
-    useEffect(() => {
-        console.log(message)
-    }, [message])
-
-    useEffect(() => {
         if(isBlackBoard === false){
             setFen(fenString);
+            setBoard(fenToBoard(fenString));
         }
         else{
             setNumbers([1, 2, 3, 4, 5, 6, 7, 8]);
-            setFen(reverseFen(fenString));
+            const reversedFenString = reverseFen(fenString);
+            setFen(reversedFenString);
+            setBoard(fenToBoard(reversedFenString));
         }
-        setBoard(fenToBoard(fen))
     }, [isBlackBoard]);
-
-    useEffect(() => {
-        console.log('kingPosition in useEffect', kingPosition)
-    }, [kingPosition])
-
-    useEffect(() => {
-        setFen((prevFen) => boardToFen(board))
-    }, [board])
 
     useEffect(() => {
 
@@ -62,7 +46,8 @@ function Board({isBlackBoardSet, roomId, playerId}) {
         if(fromSquare === null) return;
 
         if(fromSquare !== null){
-            const moves = generateLegalMoves(board, fromSquare, numbers, letters, kingPosition, isWhiteTurn)
+            const moves = generateLegalMoves(board, fromSquare, numbers, letters, kingPosition, piece_color)
+
             console.log(moves);
             if(moves !== undefined){
                 setMoves(moves);
@@ -97,6 +82,15 @@ function Board({isBlackBoardSet, roomId, playerId}) {
 
     const handlePieceClick = (e) => {
         const square_id = e.target.id;
+
+        console.log("moveCount", moveCount)
+
+        if(getPieceAtSquare(square_id) !== null){
+            if(getPieceColor(getPieceAtSquare(square_id)) === piece_color){
+                if(piece_color === "white" && moveCount % 2 !== 0) return;
+                if(piece_color === "black" && moveCount % 2 === 0) return;
+            }
+        }
 
         if(fromSquare === square_id) {
             setFromSquare(null);
@@ -142,26 +136,64 @@ function Board({isBlackBoardSet, roomId, playerId}) {
             setBoard(newBoard);
         }
         
+        setMoveCount(moveCount + 1);
+        
         var fenToSend = boardToFen(board)
         var messageToSend = {
-            messageId:1,
+            code: 200,
+            messageId : "randomId",
             roomId: roomId,
             senderId: playerId,
             message: {
-                fen: fenToSend
+                fen_string: fenToSend, 
+                to: to,
+                from: from
             },
             timestamp: new Date().getTime()
         }
-        socket.send(`/app/move/${roomId}`, {}, JSON.stringify(messageToSend));
+        socket.send(`/app/move/${roomId}`, messageToSend);
+
         setFromSquare(null);
         setToSquare(null);
         setMoves([]);
     }
 
+    const movePieceFromOpponent = (from, to, senderId) => {
+        const from_row = numbers.indexOf(parseInt(from[1]));
+        const from_col = letters.indexOf(from[0]);
+        const to_row = numbers.indexOf(parseInt(to[1]));
+        const to_col = letters.indexOf(to[0]);
+
+        console.log(from_row, from_col, to_row, to_col)
+
+        if (board && board[from_row] && board[from_row][from_col]) {
+
+            const piece = board[from_row][from_col];
+            const newBoard = [...board];
+            newBoard[from_row][from_col] = null;
+            newBoard[to_row][to_col] = piece;
+            setBoard(newBoard);
+        }
+        
+        setFromSquare(null);
+        setToSquare(null);
+        setMoves([]);
+        if(senderId !== playerId){
+            setMoveCount(moveCount + 1);
+        }
+    }
+
+    useEffect(() => {
+        if(message?.code === 200){
+            console.log("message from socket in board", message)
+            movePieceFromOpponent(message?.from, message?.to, message?.senderId)
+        }
+    }, [message]);
+
     return (
         <div className="flex flex-col justify-center items-center h-screen font-[Athiti] font-semibold bg-[#212121]">
 
-                <input className="w-1/4" type="text" value={fen} onChange={(e) => setFen(e.target.value)} />
+                {/* <input className="w-1/4" type="text" value={fen} onChange={(e) => setFen(e.target.value)} /> */}
 
                 <div className="grid grid-cols-8 h-[800px] w-[800px] ring-8 ring-[#78784e] scale-90">
                     {board.map((row, rowIndex) =>

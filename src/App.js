@@ -11,7 +11,7 @@ import Invite from './Invite/invite';
 import RegisterFirstUser from './Register/registerFirstUser';
 import WaitingArea from './Register/waitingArea';
 import socket from './Socket/socket';
-import AnimatedLoading from './Register/animatedLoading';
+import Lobby from './Register/lobby';
 import RegisterSecondUser from './Register/registerSecondUser';
 import {ChessContext} from './Context/context';
 import NewHome from './NewHome/newHome';
@@ -35,10 +35,6 @@ function App() {
   useEffect(() => {
     socket.connect();
   }, [])
-
-  useEffect(() => {
-    console.log("Message from use effect", message);
-  } , [message])
   
   return (
     <ChessContext.Provider value={{message, setMessage}}>
@@ -49,10 +45,11 @@ function App() {
             <Route path="/register" element={<RegisterFirstUser/>} />
             <Route path='/invite' element={<Invite/>} />
             <Route path='/join/:roomId/:playerId' element={<RegisterSecondUser/>} />
-            <Route path='/animation' element={<AnimatedLoading/>} />
+            <Route path='/lobby' element={<Lobby/>} />
             <Route path="/playground/:roomid" element={<Playground/>} />
             <Route path="/waitingarea/:roomid" element={<WaitingArea/>} />
             <Route path="/new-home" element={<NewHome/>} />
+            <Route path="*" element={<h1>404 Not Found</h1>} />
           </Routes>
       </Router>
     </div>

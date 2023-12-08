@@ -3,13 +3,14 @@ import { useLocation } from 'react-router-dom'
 import { toast, Toaster } from 'react-hot-toast';
 import copy from 'copy-to-clipboard'
 import { useNavigate } from 'react-router-dom';
-import {AES} from 'crypto-js'
 import socket from '../Socket/socket';
 import {ChessContext} from '../Context/context';
+import ChessAnimation2 from '../Register/chessAnimation2';
 
 function Invite(){
     const {message, setMessage} = useContext(ChessContext)
     const [visibleInviteLink, setVisibleInviteLink] = useState("")
+    const [inviteLinkShort, setInviteLinkShort] = useState("")
     const navigate = useNavigate();
 
     const location = useLocation();
@@ -18,13 +19,10 @@ function Invite(){
     const player2Id = location?.state?.player2Id === undefined ? "" : location?.state?.player2Id;
     const player1Color = location?.state?.player1Color === undefined ? "" : location?.state?.player1Color;
 
-    const createInviteLink = (data) => {
-        const hash = AES.encrypt(JSON.stringify(data), "8by8").toString()
-        return hash;
-    };
-
     useEffect(() => {
-        setVisibleInviteLink(`http://localhost:3000/join/${roomId}/${player2Id}`)
+        const link = `${process.env.REACT_APP_FRONTEND_URL}/join/${roomId}/${player2Id}`
+        setVisibleInviteLink(link)
+        setInviteLinkShort(link.trim().substring(0, 37) + "...")
     }, [])
 
     const handleCopyClick = ()=>{
@@ -33,35 +31,26 @@ function Invite(){
     }
 
     const handlePlay = () => {
-        socket.subscribe(`/topic/${roomId}`, (message1) => {
-            console.log("Message from handleplay", message1.body);
-            const parsedData = JSON.parse(message1.body);
-            setMessage(parsedData)
-        });
-        console.log(player1Color)
-        navigate('/animation', {state: {roomId: roomId, playerId: player1Id, color: player1Color}})
+        console.log("Player Id from Invite: ", player1Id);
+        navigate('/lobby', {state: {roomId: roomId, playerId: player1Id, color: player1Color}})
     }
 
     return(
-        <div className='h-full w-full bg-black flex items-center justify-center select-none'>
+
+        <div className="h-full w-full bg-[#ffffff] flex items-center justify-center select-none">
             <Toaster position="top-center" reverseOrder={false}/> 
-            <div className='flex flex-col items-center justify-start min-h-[80%] container h-max'>
-                <div className='flex flex-row items-center justify-center gap-3'>
-                    <img onMouseDown={(e)=>e.preventDefault()} src='assets/bg_assets/logo.svg' alt='8by8 logo' className='h-10 w-10 my-12'/>
-                    <h1 className='font-[Athiti] font-semibold text-3xl text-[#ffffff]'>
-                        8x8
-                    </h1>       
+            <ChessAnimation2/>
+            <div className='flex flex-col items-center justify-center w-5/12 h-2/5 bg-black z'>
+                <div className='flex flex-col items-center py-2 justify-start relative bg-white w-full h-full bottom-5 right-5 border-black border-2'>
+                    <h1 className='font-[Monoton] text-black text-[320%]'>8 X 8</h1>
+                    <h1 className='font-[Athiti] text-black text-xl font-bold mt-5'>Click on Generate to create a new chess room</h1>
+                    <div className='flex flex-row items-center justify-center w-4/5 h-max mt-10'>
+                        <div className='font-[Poppins] font-medium text-lg ring-1 ring-black text-[#212121] py-3 px-5 w-2/3 bg-slate-200 outline-none'>{inviteLinkShort}</div>
+                        <div onClick={handleCopyClick} className='bg-black text-white font-[Poppins] text-lg py-3 px-10 text-center w-1/4 ring-1 ring-black cursor-pointer hover:scale-105 ease-in-out duration-200 delay-75'>Copy</div>
+                    </div>
+            
+                    <button onClick={handlePlay} className='ring-1 ring-black text-xl text-center px-10 py-1 mt-12 font-[Athiti] hover:text-white hover:bg-black ease-in-out duration-200 delay-75'>Let's Play</button>
                 </div>
-                <h1 className='font-[Athiti] font-semibold text-2xl text-[#ffffff]'>
-                    Invite your friend for a dual
-                </h1>
-                <div className='px-4 flex flex-row mt-12 items-center justify-center h-48 w-2/3 bg-[] shadow-lg rounded-lg gap-12 ring-1 ring-orange-400'>
-                    <h1 className='font-[Poppins] font-medium text-sm text-[#ffffff] py-5 px-5 line-clamp-1 border border-orange-400 rounded-lg'>
-                        {visibleInviteLink}
-                    </h1>
-                    <div onClick={handleCopyClick} className='hover:bg-[#2790f3] cursor-pointer font-[Poppins] font-medium text-md text-[#ffffff] py-3 px-6 rounded-lg shadow-sm bg-[#2689e6]'>Copy</div>
-                </div>
-                <div className='hover:bg-[#2790f3] mt-12 cursor-pointer font-[Poppins] font-medium text-md text-[#ffffff] py-3 px-6 w-1/5 text-center rounded-lg shadow-sm bg-[#2689e6]' onClick={handlePlay}>Let's Play</div>
             </div>
         </div>
     )
