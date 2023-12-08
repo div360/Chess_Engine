@@ -4,7 +4,6 @@ import ChessInfo2 from './ChessInfo2/chessInfo2';
 import ChessInfo3 from './ChessInfo3/chessInfo3';
 import ChessInfo1 from './ChessInfo_1/chessInfo1';
 import Footer from './Footer/footer';
-import Header from './Header/header';
 import Hero from './Hero/hero';
 import Playground from './Playground/playground';
 import Invite from './Invite/invite';
@@ -14,12 +13,12 @@ import socket from './Socket/socket';
 import Lobby from './Register/lobby';
 import RegisterSecondUser from './Register/registerSecondUser';
 import {ChessContext} from './Context/context';
+import NewHome from './NewHome/newHome';
 
 function HomePage(){
 
   return(
       <div className='h-full'>
-        <Header/>
         <Hero/>
         <ChessInfo1/>
         <ChessInfo2/>
@@ -30,7 +29,7 @@ function HomePage(){
 }
 
 function App() {
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState('null')
 
   useEffect(() => {
     socket.connect();
@@ -48,6 +47,7 @@ function App() {
             <Route path='/lobby' element={<Lobby/>} />
             <Route path="/playground/:roomid" element={<Playground/>} />
             <Route path="/waitingarea/:roomid" element={<WaitingArea/>} />
+            <Route path="/new-home" element={<NewHome/>} />
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Routes>
       </Router>
