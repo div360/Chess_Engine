@@ -4,7 +4,6 @@ import ChessInfo2 from './ChessInfo2/chessInfo2';
 import ChessInfo3 from './ChessInfo3/chessInfo3';
 import ChessInfo1 from './ChessInfo_1/chessInfo1';
 import Footer from './Footer/footer';
-import Header from './Header/header';
 import Hero from './Hero/hero';
 import Playground from './Playground/playground';
 import Invite from './Invite/invite';
@@ -15,6 +14,7 @@ import Lobby from './Register/lobby';
 import RegisterSecondUser from './Register/registerSecondUser';
 import {ChessContext} from './Context/context';
 import NewHome from './NewHome/newHome';
+import VideoCall from './VideoCall/videoCall';
 
 function HomePage(){
 
@@ -37,24 +37,25 @@ function App() {
   }, [])
   
   return (
-    <ChessContext.Provider value={{message, setMessage}}>
-    <div className="h-[100vh] bg-black">
-      <Router>
-          <Routes>
-            <Route path="/" element={<HomePage/>} />
-            <Route path="/register" element={<RegisterFirstUser/>} />
-            <Route path='/invite' element={<Invite/>} />
-            <Route path='/join/:roomId/:playerId' element={<RegisterSecondUser/>} />
-            <Route path='/lobby' element={<Lobby/>} />
-            <Route path="/playground/:roomid" element={<Playground/>} />
-            <Route path="/waitingarea/:roomid" element={<WaitingArea/>} />
-            <Route path="/new-home" element={<NewHome/>} />
-            <Route path="*" element={<h1>404 Not Found</h1>} />
-          </Routes>
-      </Router>
-    </div>
-    </ChessContext.Provider>
-
+    <ChessUtilsContext.Provider value={{chessUtils, setChessUtils}}>
+      <ChessContext.Provider value={{message, setMessage}}>
+        <div className="h-[100vh] bg-black">
+          <Router>
+              <Routes>
+                <Route path="/" element={<NewHome/>} />
+                <Route path="/register" element={<RegisterFirstUser/>} />
+                <Route path='/invite' element={<Invite/>} />
+                <Route path='/join/:roomId/:playerId' element={<RegisterSecondUser/>} />
+                <Route path='/lobby' element={<Lobby/>} />
+                <Route path="/playground/:roomid" element={<Playground/>} />
+                <Route path="/waitingarea/:roomid" element={<WaitingArea/>} />
+                <Route path="/video" element={<VideoCall/>} />
+                <Route path="*" element={<h1>404 Not Found</h1>} />
+              </Routes>
+          </Router>
+        </div>
+      </ChessContext.Provider>
+    </ChessUtilsContext.Provider>
   );
 }
 
