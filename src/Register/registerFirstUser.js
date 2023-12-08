@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ChessAnimation2 from './chessAnimation2';
+import ChessAnimation from './chessAnimation';
 
 export default function RegisterFirstUser() {
     
@@ -37,7 +37,7 @@ export default function RegisterFirstUser() {
 
     return(
         <div className="h-full w-full bg-[#ffffff] flex items-center justify-center select-none ">
-            <ChessAnimation2/>
+            <ChessAnimation/>    
             <div className='flex flex-col items-center justify-center w-1/3 h-3/5 bg-black z-10'>
                 <div className='flex flex-col items-center py-2 justify-start relative bg-white w-full h-full bottom-5 right-5 border-black border-2'>
                     <h1 className='font-[Monoton] text-black text-[320%]'>8 X 8</h1>
@@ -51,11 +51,11 @@ export default function RegisterFirstUser() {
                     <div className='flex flex-row items-center justify-center w-4/5 h-max mt-10'>
                         <div onClick={(e)=>setUser({...user, color:'white'})} className={`flex flex-row items-center justify-center w-1/2 h-max py-1 bg-black ring-1 ring-black gap-3 hover:w-full ${user.color==='white' ? "w-full" : ""} ease-in-out duration-500 delay-75 cursor-pointer`}>
                             <img src='assets\bg_assets\pawn_white.svg' alt='pawn' className='h-[40px] rotate-12 '/>
-                            <h1 className='font-[Abril]  font-semibold tracking-wider text-white text-2xl py-3 text-left '>White</h1>
+                            <h1 className='font-[Athiti]  font-semibold tracking-wider text-white text-2xl py-3 text-left '>White</h1>
                         </div>
 
                         <div onClick={(e)=>setUser({...user, color:'black'})} className={`flex flex-row items-center justify-center w-1/2 h-max py-1 bg-white ring-1 ring-black gap-3 hover:w-full ${user.color==='black' ? "w-full" : ""} ease-in-out duration-500 delay-75 cursor-pointer`}>
-                            <h1 className='font-[Abril] font-semibold tracking-wider text-black text-2xl py-3 text-center'>Black</h1>
+                            <h1 className='font-[Athiti] font-semibold tracking-wider text-black text-2xl py-3 text-center'>Black</h1>
                             <img src='assets\bg_assets\pawn_black.svg' alt='pawn' className='h-[40px] -rotate-12'/>
                         </div>
                     </div>
