@@ -22,6 +22,11 @@
     src: url('../public/fonts/Monoton-Regular.ttf');
 }
 
+@font-face {
+    font-family: 'Holtwood';
+    src: url('../public/fonts/HoltwoodOneSC-Regular.ttf');
+}
+
 
 .link-underline {
     border-bottom-width: 0;

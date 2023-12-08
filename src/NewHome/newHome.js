@@ -1,4 +1,3 @@
-import '../fonts/font.css'
 import ThemeButton from '../Button/themebutton'
 
 export default function NewHome() {
@@ -17,9 +16,9 @@ export default function NewHome() {
                         </div>
                 </div>
                 <div className='ml-16 mt-10 min-w-full'>
-                    <div id='title' className='ml-2 text-[4.5rem] text-white'>8 x 8</div>
+                    <div id='title' className='ml-2 text-[4.5rem] text-white font-[Holtwood]'>8 x 8</div>
                     <div className='min-w-[20vw] max-w-[40vw]'>
-                        <div id='title2' className='-mt-4 text-[6rem] text-white tracking-wide'>CHESS</div>
+                        <div id='title2' className='-mt-4 text-[6rem] text-white tracking-wide font-[Monoton]'>CHESS</div>
                         <div className='mt-2 text-white font-century-gothic'>8X8 is your one stop solution for AI based Chess engine with loaded features like video calls, timers, move history and much more ...</div>
                     </div>
                     <div className='mt-10 font-century-gothic text-white text-4xl'>Play. Now.</div>

@@ -4,7 +4,6 @@ import ChessInfo2 from './ChessInfo2/chessInfo2';
 import ChessInfo3 from './ChessInfo3/chessInfo3';
 import ChessInfo1 from './ChessInfo_1/chessInfo1';
 import Footer from './Footer/footer';
-import Header from './Header/header';
 import Hero from './Hero/hero';
 import Playground from './Playground/playground';
 import Invite from './Invite/invite';
