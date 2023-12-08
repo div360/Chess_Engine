@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ChessAnimation from './chessAnimation';
+import { IoIosArrowRoundForward  } from "react-icons/io";
 
 export default function RegisterFirstUser() {
     
@@ -59,7 +60,7 @@ export default function RegisterFirstUser() {
                             <img src='assets\bg_assets\pawn_black.png' alt='pawn' className='h-[40px] -rotate-12'/>
                         </div>
                     </div>
-                    <button onClick={registerUser} className='ring-1 ring-black text-xl font-medium text-center px-10 py-1 mt-12 font-century-gothic hover:text-white hover:bg-black ease-in-out duration-200 delay-75'>Generate</button>
+                    <button onClick={registerUser} className='ring-1 ring-black text-xl  text-center px-10 py-1 mt-12 font-bold hover:text-white hover:bg-black ease-in-out duration-200 delay-75 flex flex-row items-center'>Generate <IoIosArrowRoundForward  size={40}/> </button>
                 </div>
             </div>
             

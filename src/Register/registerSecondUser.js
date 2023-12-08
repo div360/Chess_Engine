@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import socket from "../Socket/socket";
 import ChessAnimation from "./chessAnimation";
+import { IoIosArrowRoundForward  } from "react-icons/io";
 
 function RegisterSecondUser () {
 
@@ -64,7 +65,7 @@ function RegisterSecondUser () {
                         <input type='text' name='name' placeholder='Enter your name' className='font-[Poppins] font-medium text-lg ring-1 ring-black text-[#212121] py-3 px-5 w-2/3 line-clamp-1 bg-slate-200 outline-none' onChange={handleInputChange}/>
                     </div>
                    
-                    <button onClick={handlePlayButton} className='ring-1 ring-black text-xl text-center px-10 py-1 mt-12 font-medium font-century-gothic hover:text-white hover:bg-black ease-in-out duration-200 delay-75'>Join</button>
+                    <button onClick={handlePlayButton} className='ring-1 ring-black text-xl  text-center px-10 py-1 mt-12 font-bold hover:text-white hover:bg-black ease-in-out duration-200 delay-75 flex flex-row items-center'>Let's Play <IoIosArrowRoundForward  size={40}/> </button>
                 </div>
             </div>
         </div>
