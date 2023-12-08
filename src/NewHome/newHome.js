@@ -43,7 +43,7 @@ export default function NewHome() {
             <div className="bg-black w-full col-span-6 ">
                 <div className="mt-6 min-h-[2rem] min-w-full flex flex-row">
                     <button className="ml-16 py-1 px-4 flex flex-col justify-center items-center border-[0.1rem] border-white font-century-gothic text-sm text-white hover:border-black hover:text-black hover:bg-white">Choose your theme</button>
-                        <div className="min-h-[1.5rem] max-h-[1.8rem] flex flex-row justify-center items-center">
+                        <div className="min-h-[1.5rem] max-h-[1.8rem] flex flex-row justify-center items-center cursor-pointer">
                             <div className="ml-10 min-h-[1.5rem] max-h-[1.8rem] min-w-[2vw] bg-red-500 hover:border-4 hover:border-white"></div>
                             <div className="min-h-[1.5rem] max-h-[1.8rem] min-w-[2.5vw] bg-yellow-500 hover:border-4 hover:border-white"></div>
                             <div className="min-h-[1.5rem] max-h-[1.8rem] min-w-[3vw] bg-green-700 hover:border-4 hover:border-white"></div>
