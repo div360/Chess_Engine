@@ -1,3 +1,4 @@
+import './newHome.css'
 import ThemeButton from '../Button/themebutton'
 import { IoIosArrowRoundForward  } from "react-icons/io";
 
@@ -30,20 +31,20 @@ export default function NewHome() {
     ]
 
     const ChessPieces = ({ name, image, bgColor, textColor }) => (
-        <div className={`pt-44 col-span-1 bg-${bgColor} flex flex-row gap-20 ${bgColor=='black'?'justify-start':'pr-32 justify-end'}`}>
-            {bgColor=='black'?(<img src={image} alt="" className={`mt-6 ${name=='BISHOP'?'pl-24':'pl-32'}`}/>):(<></>)}
-            {console.log(image)}
-            <div id='title' className={`mt-10 w-1/5 text-${textColor} text-[3rem] ${bgColor=='black'?'':'text-right flex flex-row justify-end'} tracking-wider`}>THE {name}</div>
-            {bgColor=='white'?(<img src={image} alt="" className={`mt-6 ${name=='KNIGHT'?'h-36 mt-14':''}`}/>):(<></>)}
+        <div className={`pt-44 col-span-1 bg-${bgColor} flex flex-row gap-20 ${bgColor==='black'?'justify-start':'pr-32 justify-end'}`}>
+            {bgColor==='black'?(<img src={image} alt="peices" className={`mt-6 ${name==='BISHOP'?'pl-24':'pl-32'}`}/>):(<></>)}
+            <div id='title' className={`mt-10 w-1/5 text-${textColor} text-[3rem] ${bgColor==='black'?'':'text-right flex flex-row justify-end'} tracking-wider`}>THE {name}</div>
+            {bgColor==='white'?(<img src={image} alt="peices" className={`mt-6 ${name==='KNIGHT'?'h-36 mt-14':''}`}/>):(<></>)}
         </div>
     );
+
     return (
         <>
         <div className="h-screen grid grid-cols-12">
             <div className="bg-black w-full col-span-6 ">
                 <div className="mt-6 min-h-[2rem] min-w-full flex flex-row">
-                    <button className="ml-16 py-1 px-4 flex flex-col justify-center items-center border-[0.1rem] border-white font-century-gothic text-sm text-white hover:border-black hover:text-black hover:bg-white">Choose your theme</button>
-                        <div className="min-h-[1.5rem] max-h-[1.8rem] flex flex-row justify-center items-center cursor-pointer">
+                    <button className="ml-16 py-1 px-4 flex flex-col justify-center items-center border-[0.1rem] border-white font-[CenturyGothic] text-sm text-white hover:border-black hover:text-black hover:bg-white">Choose your theme</button>
+                        <div className="min-h-[1.5rem] max-h-[1.8rem] flex flex-row justify-center items-center">
                             <div className="ml-10 min-h-[1.5rem] max-h-[1.8rem] min-w-[2vw] bg-red-500 hover:border-4 hover:border-white"></div>
                             <div className="min-h-[1.5rem] max-h-[1.8rem] min-w-[2.5vw] bg-yellow-500 hover:border-4 hover:border-white"></div>
                             <div className="min-h-[1.5rem] max-h-[1.8rem] min-w-[3vw] bg-green-700 hover:border-4 hover:border-white"></div>
@@ -53,25 +54,25 @@ export default function NewHome() {
                         </div>
                 </div>
                 <div className='ml-16 mt-10 min-w-full'>
-                    <div id='title' className='ml-2 text-[4.5rem] text-white font-[Holtwood]'>8 x 8</div>
+                    <div id='title' className='ml-2 text-[4.5rem] text-white'>8 x 8</div>
                     <div className='min-w-[20vw] max-w-[40vw]'>
-                        <div id='title2' className='-mt-4 text-[6rem] text-white tracking-wide font-[Monoton]'>CHESS</div>
-                        <div className='mt-2 text-white font-century-gothic'>8X8 is your one stop solution for AI based Chess engine with loaded features like video calls, timers, move history and much more ...</div>
+                        <div id='title2' className='-mt-4 text-[6rem] text-white tracking-wide'>CHESS</div>
+                        <div className='mt-2 text-white font-[CenturyGothic]'>8X8 is your one stop solution for AI based Chess engine with loaded features like video calls, timers, move history and much more ...</div>
                     </div>
-                    <div className='mt-10 font-century-gothic text-white text-4xl'>Play. Now.</div>
-                    <img src=" ./chesspieceline.svg" className='ml-2 mt-16 h-28' />
+                    <div className='mt-10 font-[CenturyGothic] text-white text-4xl'>Play. Now.</div>
+                    <img src="./chesspieceline.svg" className='ml-2 mt-16 h-28' />
                 </div>
             </div>
             <div className="bg-white col-span-6">
                 <div className='mt-8 min-w-full flex flex-col justify-center items-center'>
                     <div className='min-w-[5vw] grid grid-cols-5 gap-4'>
-                        <div className='text-3xl font-century-gothic font-bold'>F</div>
-                        <div className='text-3xl font-century-gothic font-bold'>I</div>
-                        <div className='text-3xl font-century-gothic font-bold'>R</div>
-                        <div className='text-3xl font-century-gothic font-bold'>S</div>
-                        <div className='text-3xl font-century-gothic font-bold'>T</div>
+                        <div className='text-3xl font-[CenturyGothic] font-bold'>F</div>
+                        <div className='text-3xl font-[CenturyGothic] font-bold'>I</div>
+                        <div className='text-3xl font-[CenturyGothic] font-bold'>R</div>
+                        <div className='text-3xl font-[CenturyGothic] font-bold'>S</div>
+                        <div className='text-3xl font-[CenturyGothic] font-bold'>T</div>
                     </div>
-                        <div className='text-5xl font-century-gothic font-bold tracking-widest'>MOVE</div>
+                        <div className='text-5xl font-[CenturyGothic] font-bold tracking-widest'>MOVE</div>
                     <img src="./chessfront.svg" className='mt-10 h-52 mb-24' />
                     <div className='w-full flex flex-col justify-center items-center gap-16'>
                         <ThemeButton redirect={"/register"} text={"Play with Friends"}/>
@@ -80,8 +81,9 @@ export default function NewHome() {
                 </div>
             </div>
         </div>
+
         <div className='h-[80vh] flex flex-col'>
-            <div className="grid grid-cols-4">
+            <div className="grid grid-cols-4 ">
                 {
                     stepGridItems.map((item) => (
                         <div className='col-span-1'>
@@ -94,7 +96,7 @@ export default function NewHome() {
                 {
                     stepGridItems.map((item) => (
                         <div className={`pl-10 col-span-1 bg-${item.bgColor} text-${item.textColor}`} >
-                            <div className='text-[1.85rem] font-century-gothic'>{item.title}</div>
+                            <div className='text-[1.85rem] font-[CenturyGothic]'>{item.title}</div>
                         </div>
                     ))
                 }
@@ -104,7 +106,7 @@ export default function NewHome() {
                 {
                     stepGridItems.map((item) => (
                         <div className={`pl-10 col-span-1 bg-${item.bgColor} text-${item.textColor}`} >
-                            <div className='mt-12 font-century-gothic w-4/5'>{item.description}</div>  
+                            <div className='mt-12 font-[CenturyGothic] w-4/5'>{item.description}</div>  
                         </div>
                     ))
                 }
@@ -118,7 +120,7 @@ export default function NewHome() {
                                     <img src="./assets/bg_assets/step4image.svg" alt="chessboard" />
                                 </div>
                             ):(
-                                <div className={`mt-24 py-2 px-1 w-4/5 bg-white text-black border-[0.15rem] border-black flex flex-row justify-center items-center font-bold text-[1.1rem] font-century-gothic tracking-wide`}>{item.buttonText} <IoIosArrowRoundForward className='ml-2' size={30}/></div>
+                                <div className={`mt-24 py-2 px-1 w-4/5 bg-white text-black border-[0.15rem] border-black flex flex-row justify-center items-center font-bold text-[1.1rem] font-[CenturyGothic] tracking-wide`}>{item.buttonText} <IoIosArrowRoundForward className='ml-2' size={30}/></div>
                             )
                             }
                         </div>
@@ -131,7 +133,7 @@ export default function NewHome() {
                 <div className='pl-10 col-span-1 bg-black'><p id='title2' className='text-[3.5rem] tracking-wider'>FEATURES:</p></div>
                 <div className="col-span-1 bg-white h-full"></div>
             </div>
-            <div className='grid grid-cols-2 font-century-gothic'>
+            <div className='grid grid-cols-2 font-[CenturyGothic]'>
                 <div className='pl-10 col-span-1 bg-black'>
                     <div className='px-3 py-2 mt-10 bg-white text-black w-9/12 font-bold text-[1.5rem]'>{features[0].title}</div>
                     <div className='mt-8 w-8/12 text-white'>
@@ -143,7 +145,7 @@ export default function NewHome() {
                     <img src="./assets/bg_assets/theme-changed.svg" alt="theme changed" className='h-28'/>
                 </div>
             </div>
-            <div className='grid grid-cols-2 font-century-gothic'>
+            <div className='grid grid-cols-2 font-[CenturyGothic]'>
                 <div className='pt-12 pl-10 col-span-1 bg-black'>
                     <div className='px-3 py-2 mt-10 bg-white text-black w-9/12 font-bold text-[1.5rem]'>{features[1].title}</div>
                     <div className='mt-8 w-8/12 text-white'>
@@ -161,7 +163,7 @@ export default function NewHome() {
                     </div>
                 </div>
             </div>
-            <div className='grid grid-cols-2 font-century-gothic'>
+            <div className='grid grid-cols-2 font-[CenturyGothic]'>
                 <div className='pt-12 pl-10 col-span-1 bg-black'>
                     <div className='px-3 py-2 mt-10 bg-white text-black w-9/12 font-bold text-[1.5rem]'>{features[2].title}</div>
                     <div className='mt-8 w-8/12 text-white'>
@@ -174,7 +176,7 @@ export default function NewHome() {
                     </div>
                 </div>
             </div>
-            <div className='grid grid-cols-2 font-century-gothic'>
+            <div className='grid grid-cols-2 font-[CenturyGothic]'>
                 <div className='pt-12 pl-10 col-span-1 bg-black'>
                     <div className='px-3 py-2 mt-10 bg-white text-black w-9/12 font-bold text-[1.5rem]'>{features[3].title}</div>
                     <div className='mt-8 w-8/12 text-white'>

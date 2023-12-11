@@ -10,20 +10,15 @@ import RegisterSecondUser from './Register/registerSecondUser';
 import {ChessContext, ChessUtilsContext} from './Context/context';
 import NewHome from './NewHome/newHome';
 import VideoCall from './VideoCall/videoCall';
+import NotFound from './404';
 
 
 function App() {
   const [message, setMessage] = useState(null)
-  const [chessUtils, setChessUtils] = useState({bg:"bg-[#990000]", ring:"ring-[#990000]", text:"text-[#990000]", border:"border-[#990000]", bgHover:"hover:bg-[#990000]"})
-
+  const [chessUtils, setChessUtils] = useState({bg:"bg-[#000000]", ring:"ring-[#000000]", text:"text-[#000000]", border:"border-[#000000]", bgHover:"hover:bg-[#000000]"})
 
   useEffect(() => {
     socket.connect();
-
-    setTimeout(() => {
-      setChessUtils({...chessUtils, bg: "bg-[#006600]", ring: "ring-[#006600]", text: "text-[#006600]", border: "border-[#006600]", bgHover: "hover:bg-[#006600]"})
-    }, 5000);
-
   }, [])
   
   return (
@@ -40,7 +35,7 @@ function App() {
                 <Route path="/playground/:roomid" element={<Playground/>} />
                 <Route path="/waitingarea/:roomid" element={<WaitingArea/>} />
                 <Route path="/video" element={<VideoCall/>} />
-                <Route path="*" element={<h1>404 Not Found</h1>} />
+                <Route path="*" element={<NotFound/>} />
               </Routes>
           </Router>
         </div>
