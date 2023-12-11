@@ -27,6 +27,11 @@
     src: url('../public/fonts/HoltwoodOneSC-Regular.ttf');
 }
 
+@font-face {
+    font-family: 'CenturyGothic';
+    src: url('../public/fonts/CenturyGothic.otf') format('opentype');
+}
+
 
 .link-underline {
     border-bottom-width: 0;

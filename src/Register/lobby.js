@@ -51,7 +51,9 @@ const Lobby=()=>{
     const dict = {
       100: "Start Game",
       200: "New Move",
-      300: "Subscribed to Room"
+      300: "Subscribed to Room",
+      400: "Game Over",
+      500: "Video Call"
     }
 
 
@@ -77,6 +79,12 @@ const Lobby=()=>{
           const { message } = parsedData;
           setMessage({code: 300, roomId: roomId, message: message?.message})
         }
+
+        if(code === 500){
+          const { videoMessage, senderId } = parsedData;
+          console.log(parsedData)
+          setMessage({code: 500, roomId: roomId, senderId:senderId, message: videoMessage})
+        }
         
       });
       
@@ -89,7 +97,8 @@ const Lobby=()=>{
 
     useEffect(() => {
         if(message?.code === 100){
-            navigate(`/playground/${roomId}`, {state: {isBlackBoard:color?.toLowerCase()==="white"?false:true, roomId: roomId, playerId: playerId}})
+            navigate('/video', {state: {roomId: roomId, playerId: playerId}})
+            // navigate(`/playground/${roomId}`, {state: {isBlackBoard:color?.toLowerCase()==="white"?false:true, roomId: roomId, playerId: playerId}})
         }
     }, [message])
 

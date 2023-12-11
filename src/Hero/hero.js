@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import '../fonts/font.css'
 
 function Hero(){
     const navigate = useNavigate();
