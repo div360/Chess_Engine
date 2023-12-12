@@ -1,8 +1,10 @@
 import React, { createRef, useContext, useEffect, useState } from 'react'
+import './videoCall.css'
 import SimplePeer from 'simple-peer'
 import socket from '../Socket/socket'
-import { ChessContext } from '../Context/context'
+import { ChessContext, ChessUtilsContext } from '../Context/context'
 import { useLocation } from 'react-router-dom'
+import { PiPhoneCallFill } from 'react-icons/pi'
 
 export default function VideoCall() {
     const connStatus = {
@@ -15,6 +17,7 @@ export default function VideoCall() {
     }
 
     const location = useLocation();
+    const {chessUtils} = useContext(ChessUtilsContext)
 
 
     const roomId = location?.state?.roomId === undefined ? "" : location.state.roomId;
@@ -160,30 +163,21 @@ export default function VideoCall() {
 
     
     return (
-        <div className='bg-white h-full w-full flex flex-col items-center justify-center'>
-           <button className='bg-blue-500 text-white px-9 py-8 text-xl rounded-xl' onClick={sendInvitation}>Call</button>
-        
-
-            {
-                connectionStatus === connStatus.OFFERING && 
-                <div>
-                    <p>Offering...</p>
-                    {/* <p>{offer}</p> */}
-                </div>
-            }
-
-            {
-                connectionStatus === connStatus.RECEIVING && 
-                <div>
-                    <p>Receiving...</p>
-                    <button className='bg-blue-500 text-white px-9 py-8 text-xl rounded-xl' onClick={acceptInvitation}>Answer Call</button>
+        <div className='h-full w-full flex flex-col items-center justify-center'>
+           {/* <button className='bg-blue-500 text-white px-9 py-8 text-xl rounded-xl' onClick={sendInvitation}>Call</button> */}
+    
+            {/* { */}
+                // connectionStatus === connStatus.RECEIVING && 
+                <div className='flex flex-col items-center justify-center gap-8'>
+                    <PiPhoneCallFill className='text-white text-[60px] animate-shake'/>
+                    <button className={`bg-white text-black px-4 py-2 text-lg font-semibold font-[CenturyGothic]`} onClick={acceptInvitation}>Slide to answer..</button>
                 </div> 
-            }
+            {/* // } */}
 
-            <div>
+            {/* <div>
                 <video className='h-48 w-48 border-2' ref={videoSelf} autoPlay muted={true}></video>
                 <video className='h-48 w-48 border-2' ref={videoOther} autoPlay></video>
-            </div>
+            </div> */}
         </div>
     )
 }
