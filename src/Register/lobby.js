@@ -85,6 +85,12 @@ const Lobby=()=>{
           console.log(parsedData)
           setMessage({code: 500, roomId: roomId, senderId:senderId, message: videoMessage})
         }
+
+        if(code === 600){
+          const { message, senderId } = parsedData;
+          console.log(parsedData)
+          setMessage({code: 600, roomId: roomId, senderId:senderId, message: message?.message})
+        }
         
       });
       
@@ -97,8 +103,8 @@ const Lobby=()=>{
 
     useEffect(() => {
         if(message?.code === 100){
-            navigate('/video', {state: {roomId: roomId, playerId: playerId}})
-            // navigate(`/playground/${roomId}`, {state: {isBlackBoard:color?.toLowerCase()==="white"?false:true, roomId: roomId, playerId: playerId}})
+            // navigate('/video', {state: {roomId: roomId, playerId: playerId}})
+            navigate(`/playground/${roomId}`, {state: {isBlackBoard:color?.toLowerCase()==="white"?false:true, roomId: roomId, playerId: playerId}})
         }
     }, [message])
 

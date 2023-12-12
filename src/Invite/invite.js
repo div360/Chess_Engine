@@ -22,7 +22,7 @@ function Invite(){
     useEffect(() => {
         const link = `${process.env.REACT_APP_FRONTEND_URL}/join/${roomId}/${player2Id}`
         setVisibleInviteLink(link)
-        setInviteLinkShort(link.trim().substring(0, 37) + "...")
+        setInviteLinkShort(link.trim().substring(0, 53) + "...")
     }, [])
 
     const handleCopyClick = ()=>{
@@ -39,7 +39,7 @@ function Invite(){
     return(
 
         <div className="h-full w-full bg-[#ffffff] flex items-center justify-center select-none">
-            <Toaster position="top-center" reverseOrder={false}/> 
+            <Toaster toastOptions={{style:{background:`${chessUtils?.hex}`, borderRadius:"0px", color:"white", fontFamily:"CenturyGothic"}}} position="top-center" reverseOrder={false}/> 
             <ChessAnimation/>
             <div className={`flex flex-col items-center justify-center w-5/12 h-2/5 ${chessUtils?.bg} z-10`}>
                 <div className={`flex flex-col items-center py-2 justify-start relative bg-white w-full h-full bottom-5 right-5 ${chessUtils?.border} border-4`}>

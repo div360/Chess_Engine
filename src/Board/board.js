@@ -1,8 +1,16 @@
-import React, {useState, useEffect, useContext} from "react";
+import React, {useState, useEffect, useContext, useRef } from "react";
 import { boardToFen, fenToBoard, generateLegalMoves, getPieceColor, reverseFen } from "./fenBoardLogic";
 import "./board.css";
 import socket from "../Socket/socket";
-import { ChessContext } from "../Context/context";
+import { ChessContext, ChessUtilsContext } from "../Context/context";
+import { PiPhoneCallFill } from "react-icons/pi";
+import { IoMdArrowDropupCircle } from "react-icons/io";
+import { IoPersonSharp } from "react-icons/io5";
+import { RiSendPlaneFill } from "react-icons/ri";
+import { ChessLeftMessage, ChessRightMessage } from "./chessMessage";
+import ChessAnimation from "../Register/chessAnimation";
+import { motion, AnimatePresence } from 'framer-motion';
+import VideoCall from "../VideoCall/videoCall";
 
 function Board({isBlackBoardSet, roomId, playerId}) {
     const fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
@@ -26,6 +34,50 @@ function Board({isBlackBoardSet, roomId, playerId}) {
     const [moves, setMoves] = useState([]);
 
     const [kingPosition, setKingPosition] = useState({white: "e1", black: "e8"});
+
+    const {chessUtils} = useContext(ChessUtilsContext);
+
+
+    const [isCollapsed, setIsCollapsed] = useState(true);
+    const [chatMessage, setChatMessage] = useState("");
+    const [chatMessageArray, setChatMessageArray] = useState([]); // [ {senderId: "randomId", message: "message"}, {senderId: "randomId", message: "message"} ]
+
+    const sendMessage = () => {
+        if(chatMessage.trim() === "") return;
+        socket.send(`/app/chat/${roomId}`, {
+            code: 600,
+            messageId : "randomId",
+            roomId: roomId,
+            senderId: playerId,
+            message: {
+                message: chatMessage
+            },
+            timestamp: new Date().getTime()
+        })
+        setChatMessage("");    
+    };
+
+    const handleMessageChange = (e) => {
+        setChatMessage(e.target.value);
+    }
+
+    const handleKeyPressMessage = (e) => {
+        if(e.key === "Enter"){
+            sendMessage();
+        }
+    }
+
+    const chatContainerRef = useRef(null);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [chatMessageArray]);
+
+    const scrollToBottom = () => {
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        }
+    };
 
     useEffect(() => {
         if(isBlackBoard === false){
@@ -188,14 +240,101 @@ function Board({isBlackBoardSet, roomId, playerId}) {
             console.log("message from socket in board", message)
             movePieceFromOpponent(message?.from, message?.to, message?.senderId)
         }
+        else if(message?.code === 600){
+            setChatMessageArray([...chatMessageArray, {senderId: message?.senderId, message: message?.message}])
+            if(isCollapsed){
+                setIsCollapsed(false);
+            }
+        }
     }, [message]);
 
     return (
-        <div className="flex flex-col justify-center items-center h-screen font-[Athiti] font-semibold bg-[#212121]">
+        <div className="flex flex-col justify-center items-center h-screen font-[Athiti]  bg-white overflow-clip">
+
+                <ChessAnimation />
+
+                <h1 className={`text-[60px] font-[Monoton] font-medium absolute z-10 top-5 bg-white h-max ${chessUtils.text}`}>8 X 8</h1>
 
                 {/* <input className="w-1/4" type="text" value={fen} onChange={(e) => setFen(e.target.value)} /> */}
 
-                <div className="grid grid-cols-8 h-[800px] w-[800px] ring-8 ring-[#78784e] scale-90">
+
+                {/* Chat and video call UI start here */}
+
+                <div className="flex flex-row items-start absolute top-2 right-10 justify-between self-end h-[27%] w-[25%] gap-5 bg-black">
+                    <VideoCall/>
+                </div>
+
+                <AnimatePresence>
+                {
+                    isCollapsed && <motion.div
+                    key="collapsed"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: '6%' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 1, ease: 'easeInOut', type: "tween" }}
+                    className="flex flex-row items-start fixed bottom-0 right-10 justify-between self-end h-[6%] w-[25%] gap-5 bg-black select-none"
+                  >
+                    <div className="flex flex-row items-center justify-between h-full w-full px-4">
+                        <IoMdArrowDropupCircle onClick={()=>setIsCollapsed(false)} className="rounded-full h-8 w-8 absolute bg-black text-white -top-[10px] left-[50%] cursor-pointer"/>
+            
+                            <div className="flex flex-row items-center justify-start gap-4">
+                                <IoPersonSharp className={`text-[23px] text-white`} />
+                                <h1 className="text-white font-[Poppins] font-semibold text-lg">Hrishabh Tiwari</h1>
+                            </div>
+                            <PiPhoneCallFill className={`text-[23px] text-white`} />
+                        </div>
+                    </motion.div>
+                }
+
+                {
+                    !isCollapsed && <motion.div
+                        key="expanded"
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: '70%' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 1, ease: 'easeInOut', type: "tween" }}
+                        className="flex flex-row items-start fixed bottom-0 right-10 justify-between self-end h-[70%] w-[25%] gap-5 bg-black select-none"
+                    >
+                        <div className="flex flex-col items-center justify-start h-full w-[95%] mx-auto">
+                            
+                                <div className="flex flex-row items-center justify-between h-[8%] w-full px-4">
+                            
+                                <IoMdArrowDropupCircle onClick={()=>setIsCollapsed(true)} className="rotate-180 rounded-full h-8 w-8 absolute bg-black text-white -top-[10px] left-[50%] cursor-pointer"/>
+
+                                    <div className="flex flex-row items-center justify-start gap-4">
+                                        <IoPersonSharp className={`text-[23px] text-white`} />
+                                        <h1 className="text-white font-[Poppins] font-semibold text-lg">Hrishabh Tiwari</h1>
+                                    </div>
+                                    <PiPhoneCallFill className={`text-[23px] text-white cursor-pointer`} />
+                                </div>
+
+                                <div ref={chatContainerRef} className="flex flex-col items-center h-[82%] bg-white w-full mb-4 py-2 overflow-y-scroll">
+                                    {
+                                        chatMessageArray.map((msg, index)=>(
+                                            msg.senderId === playerId ? 
+                                            <ChessRightMessage key={index} message={msg.message} />
+                                             : 
+                                            <ChessLeftMessage key={index} message={msg.message} />
+
+                                        ))
+                                    }
+                                </div>
+
+                                <div className="flex flex-row items-center justify-between w-full h-[8%] bg-white mb-4 px-4">
+                                    <input onKeyDown={handleKeyPressMessage} onChange={handleMessageChange} name="chatMessage" value={chatMessage} placeholder={"Type a message..."} className="placeholder:text-slate-400 font-semibold text-lg h-full bg-white w-full outline-none" autoComplete={"off"}></input>
+                                    <RiSendPlaneFill onClick={sendMessage} size={35} className="text-black cursor-pointer"/>
+                                </div>
+                            </div>
+                        </motion.div>
+                }
+                </AnimatePresence>
+
+                {/* Chat and video call UI end here */}
+
+                {/* Chess Board UI start here */}
+
+
+                <div className={`grid grid-cols-8 h-[800px] w-[800px] ring-8 ${chessUtils.ring} scale-[80%] font-semibold bg-white`}>
                     {board.map((row, rowIndex) =>
                         row.map((piece, colIndex) => (
                           
@@ -205,8 +344,8 @@ function Board({isBlackBoardSet, roomId, playerId}) {
                                 key={`${letters[colIndex]}${numbers[rowIndex]}`}
                                 className={`flex flex-col items-start justify-center w-[100px] h-[100px]  ${
                                     (rowIndex + colIndex) % 2 === 0
-                                        ? "bg-[#ebecd0] text-[#779556]"
-                                        : "bg-[#779556] text-[#ebecd0]"
+                                        ? ` ${chessUtils.text}`
+                                        : `${chessUtils.bg} text-white`
                                 } 
                                 ${fromSquare === `${letters[colIndex]}${numbers[rowIndex]}` ? " border-4 border-[#494949] bg-yellow-400" : ""}
                                 ${moves.includes(`${letters[colIndex]}${numbers[rowIndex]}`) ? `${(rowIndex + colIndex) % 2 === 0 ? "bg-[#f0d860]" : "bg-[#d4b727]"}   border-1 border-[#494949] cursor-pointer` : ""}                                `}
@@ -235,6 +374,8 @@ function Board({isBlackBoardSet, roomId, playerId}) {
                         ))    
                     )}
                 </div>
+
+                {/* Chess Board UI end here */}
         </div>
     );
 }
