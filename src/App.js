@@ -16,7 +16,8 @@ import NotFound from './404';
 function App() {
   const [message, setMessage] = useState(null)
 
-  const [chessUtils, setChessUtils] = useState({bg:"bg-[#000000]", ring:"ring-[#000000]", text:"text-[#000000]", border:"border-[#000000]", bgHover:"hover:bg-[#000000]", hex:"#000000"})
+  const [chessUtils, setChessUtils] = useState({bg:"bg-[#000000]", ring:"ring-[#000000]", text:"text-[#000000]", border:"border-[#000000]", bgHover:"hover:bg-[#000000]", hex:"#000000", call:false})
+
 
   useEffect(() => {
     socket.connect();

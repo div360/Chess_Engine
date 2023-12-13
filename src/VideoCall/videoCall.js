@@ -3,25 +3,23 @@ import './videoCall.css'
 import SimplePeer from 'simple-peer'
 import socket from '../Socket/socket'
 import { ChessContext, ChessUtilsContext } from '../Context/context'
-import { useLocation } from 'react-router-dom'
 import { PiPhoneCallFill } from 'react-icons/pi'
+import { motion } from 'framer-motion'
 
-export default function VideoCall() {
+export default function VideoCall({roomId, playerId}) {
     const connStatus = {
         STAGE : 'STAGE',
         OFFERING: 'OFFERING',
         RECEIVING: 'RECEIVING',
         ANSWERING: 'ANSWERING',
         CONNECTED: 'CONNECTED',
+        STREAM : 'STREAM',
         FAILED: 'FAILED',
     }
 
-    const location = useLocation();
-    const {chessUtils} = useContext(ChessUtilsContext)
+    const {chessUtils, setChessUtils} = useContext(ChessUtilsContext)
 
-
-    const roomId = location?.state?.roomId === undefined ? "" : location.state.roomId;
-    const senderId = location?.state?.playerId === undefined ? "" : location.state.playerId;
+    const senderId = playerId
 
     
     const {message} = useContext(ChessContext)
@@ -32,7 +30,16 @@ export default function VideoCall() {
     const [connectionStatus, setConnectionStatus] = useState(connStatus.STAGE)
     const [offer, setOffer] = useState(null)
     const [simplePeer, setSimplePeer] = useState(null)
+    const [selfStream, setSelfStream] = useState(null)
     const [otherStream, setOtherStream] = useState(null)
+
+    const [initiator, setInitiator] = useState(false)
+
+    useEffect(()=>{
+        if(chessUtils?.call === true && connectionStatus === connStatus.STAGE){
+            sendInvitation()
+        }
+    }, [chessUtils?.call])
 
     useEffect(()=>{
         if(message?.code === 500){
@@ -45,6 +52,7 @@ export default function VideoCall() {
                 setOffer(payLoad)
                 if(senderId !== message?.senderId){
                     setConnectionStatus(connStatus.RECEIVING)
+                    setChessUtils({...chessUtils, call:true})
                 }
             }
             else if(type === 'answer'){
@@ -63,12 +71,18 @@ export default function VideoCall() {
         }
     }, [otherStream])
 
+    useEffect(()=>{
+        if(selfStream){
+            videoSelf.current.srcObject = selfStream
+            videoSelf.current.play()
+        }
+    }, [selfStream])
+
     const sendInvitation = () => {
+        setInitiator(true)
         navigator.mediaDevices.getUserMedia({audio:true, video:true}).then((mediaStream)=>{
-            const video = videoSelf.current
-            video.srcObject = mediaStream
-            video.muted = true
-            video.play()
+
+            setSelfStream(mediaStream)
 
             const sp = new SimplePeer({
                 initiator: true,
@@ -115,10 +129,8 @@ export default function VideoCall() {
 
     const acceptInvitation = () => {
         navigator.mediaDevices.getUserMedia({audio:true, video:true}).then((mediaStream)=>{
-            const video = videoSelf.current
-            video.srcObject = mediaStream
-            video.muted = true
-            video.play()
+        
+            setSelfStream(mediaStream)
 
             const sp = new SimplePeer({
                 initiator: false,
@@ -154,6 +166,7 @@ export default function VideoCall() {
             })
 
             sp.on('stream', (stream)=>{
+                setConnectionStatus(connStatus.STREAM)
                 setOtherStream(stream)
             })
 
@@ -161,23 +174,54 @@ export default function VideoCall() {
         })
     }
 
+
+    const handleDragEnd = (event, info) => {
+        if(info.offset.x > 250){
+            acceptInvitation()
+        }
+    }
     
     return (
-        <div className='h-full w-full flex flex-col items-center justify-center'>
-           {/* <button className='bg-blue-500 text-white px-9 py-8 text-xl rounded-xl' onClick={sendInvitation}>Call</button> */}
-    
-            {/* { */}
-                // connectionStatus === connStatus.RECEIVING && 
-                <div className='flex flex-col items-center justify-center gap-8'>
-                    <PiPhoneCallFill className='text-white text-[60px] animate-shake'/>
-                    <button className={`bg-white text-black px-4 py-2 text-lg font-semibold font-[CenturyGothic]`} onClick={acceptInvitation}>Slide to answer..</button>
+        <div className='flex flex-col items-center justify-center gap-4 h-[80%] w-[95%] mx-auto my-auto bg-white'>
+            {
+                ((connectionStatus === connStatus.STAGE || otherStream===null) && (initiator)) && <>
+                    <PiPhoneCallFill className='animate-shake-2 text-black bg-white rounded-full h-[80px] w-[80px] p-3 ml-1'/>
+                    <h1 className='text-black text-2xl font-bold font-[Athiti] tracking-wider'>
+                        Calling
+                        <span className="dot-animation px-1 text-[50px]">
+                            <span className="animate-ping" style={{ animationDelay: '0.5s' }}>.</span>
+                            <span className="animate-ping" style={{ animationDelay: '0.9s' }}>.</span>
+                            <span className="animate-ping" style={{ animationDelay: '0s' }}>.</span>
+                        </span>
+                    </h1>
+                </>
+            }
+            {
+                connectionStatus === connStatus.RECEIVING && 
+                <div className='flex flex-col items-center justify-center gap-8 w-full'>
+                    <PiPhoneCallFill className='text-black text-[60px] animate-shake'/>
+                    <motion.div className='overflow-hidden flex flex-row items-center justify-start w-[90%] bg-gradient-to-r from-white to-gray-400 h-16 rounded-full'>
+                        <motion.div 
+                            drag='x'
+                            dragConstraints={{left:0, right:300}}
+                            dragElastic={{left:0, right:0.1}}
+                            dragDirectionLock
+                            onDragEnd={handleDragEnd}
+                        >
+                            <PiPhoneCallFill className='animate-shake-2 text-[40px] text-green-500 bg-black rounded-full h-[60px] w-[60px] p-3 ml-1'/>
+                        </motion.div>
+                        <h1 className='text-slate-400 ml-24 text-xl font-semibold font-[CenturyGothic]'>Slide to answer..</h1>
+                    </motion.div>                
                 </div> 
-            {/* // } */}
+            }
 
-            {/* <div>
-                <video className='h-48 w-48 border-2' ref={videoSelf} autoPlay muted={true}></video>
-                <video className='h-48 w-48 border-2' ref={videoOther} autoPlay></video>
-            </div> */}
+            
+               
+            <div className={`flex flex-row items-center justify-center w-[90%] h-[80%] gap-8 px-4 ${otherStream===null ? 'hidden':''}`}>
+                <video className='h-full w-2/3 ring-4 ring-black object-cover' ref={videoOther} autoPlay></video>
+                <video className='h-full w-1/3  ring-4 ring-black object-cover' ref={videoSelf} autoPlay muted={true}></video>
+            </div>
+            
         </div>
     )
 }

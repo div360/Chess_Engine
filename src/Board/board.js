@@ -35,7 +35,7 @@ function Board({isBlackBoardSet, roomId, playerId}) {
 
     const [kingPosition, setKingPosition] = useState({white: "e1", black: "e8"});
 
-    const {chessUtils} = useContext(ChessUtilsContext);
+    const {chessUtils, setChessUtils} = useContext(ChessUtilsContext);
 
 
     const [isCollapsed, setIsCollapsed] = useState(true);
@@ -249,7 +249,7 @@ function Board({isBlackBoardSet, roomId, playerId}) {
     }, [message]);
 
     return (
-        <div className="flex flex-col justify-center items-center h-screen font-[Athiti]  bg-white overflow-clip">
+        <div className="flex flex-col justify-center items-center h-screen font-[Athiti]  bg-white overflow-clip select-none">
 
                 <ChessAnimation />
 
@@ -260,9 +260,11 @@ function Board({isBlackBoardSet, roomId, playerId}) {
 
                 {/* Chat and video call UI start here */}
 
-                <div className="flex flex-row items-start absolute top-2 right-10 justify-between self-end h-[27%] w-[25%] gap-5 bg-black">
-                    <VideoCall/>
-                </div>
+                
+                    <div className={`rounded-sm flex flex-row items-start absolute top-2 right-10 justify-between self-end h-[27%] w-[25%] gap-5 bg-black ${chessUtils?.call ? "":"hidden"}`}>
+                        <VideoCall roomId={roomId} playerId={playerId}/>
+                    </div>
+                
 
                 <AnimatePresence>
                 {
@@ -305,7 +307,7 @@ function Board({isBlackBoardSet, roomId, playerId}) {
                                         <IoPersonSharp className={`text-[23px] text-white`} />
                                         <h1 className="text-white font-[Poppins] font-semibold text-lg">Hrishabh Tiwari</h1>
                                     </div>
-                                    <PiPhoneCallFill className={`text-[23px] text-white cursor-pointer`} />
+                                    <PiPhoneCallFill onClick={()=>setChessUtils({...chessUtils, call:true})} className={`text-[23px] text-white cursor-pointer`} />
                                 </div>
 
                                 <div ref={chatContainerRef} className="flex flex-col items-center h-[82%] bg-white w-full mb-4 py-2 overflow-y-scroll">
