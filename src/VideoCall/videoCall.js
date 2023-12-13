@@ -3,7 +3,7 @@ import './videoCall.css'
 import SimplePeer from 'simple-peer'
 import socket from '../Socket/socket'
 import { ChessContext, ChessUtilsContext } from '../Context/context'
-import { PiPhoneCallFill } from 'react-icons/pi'
+import { PiPhoneCallFill, PiPhoneFill } from 'react-icons/pi'
 import { motion } from 'framer-motion'
 
 export default function VideoCall({roomId, playerId}) {
@@ -43,11 +43,9 @@ export default function VideoCall({roomId, playerId}) {
 
     useEffect(()=>{
         if(message?.code === 500){
-            console.log(senderId, message?.senderId, message?.message?.data?.type)
             const payLoad = message?.message?.data 
             const type = message?.message?.type
 
-            console.log(type, payLoad)
             if(type === 'offer'){
                 setOffer(payLoad)
                 if(senderId !== message?.senderId){
@@ -58,6 +56,32 @@ export default function VideoCall({roomId, playerId}) {
             else if(type === 'answer'){
                 if(senderId !== message?.senderId){
                     simplePeer?.signal(payLoad)
+                }
+            }
+            else if(type === 'end'){
+                if(senderId !== message?.senderId){
+                    setConnectionStatus(connStatus.STAGE)
+                    setChessUtils({...chessUtils, call:false})
+                    videoSelf.current.srcObject = null
+                    videoOther.current.srcObject = null
+                    if(simplePeer){
+                        simplePeer?.destroy()
+                        setSimplePeer(null)
+                    }
+                    setOffer(null)
+                    if(selfStream){
+                        selfStream?.getTracks().forEach((track) => {
+                            track.stop();
+                        })
+                        setSelfStream(null)
+                    }
+                    if(otherStream){
+                        otherStream?.getTracks().forEach((track) => {
+                            track.stop();
+                        });
+                        setOtherStream(null)
+                    }
+                    setInitiator(false)
                 }
             }
         }
@@ -180,6 +204,45 @@ export default function VideoCall({roomId, playerId}) {
             acceptInvitation()
         }
     }
+
+    const handleEndCall = () => {
+        setConnectionStatus(connStatus.STAGE)
+        setChessUtils({...chessUtils, call:false})
+        videoSelf.current.srcObject = null
+        videoOther.current.srcObject = null
+        if(simplePeer){
+            simplePeer?.destroy()
+            setSimplePeer(null)
+        }
+        setOffer(null)
+        if(selfStream){
+            selfStream?.getTracks().forEach((track) => {
+                track.stop();
+            })
+            setSelfStream(null)
+        }
+        if(otherStream){
+            otherStream?.getTracks().forEach((track) => {
+                track.stop();
+            });
+            setOtherStream(null)
+        }
+        setInitiator(false)
+
+        var dataToSend = {
+            code: 500,
+            messageId : "randomId",
+            roomId: roomId,
+            senderId: senderId,
+            videoMessage: {
+                data: null,
+                type: 'end',
+            },
+            timestamp: new Date().getTime()
+        }
+
+        socket.send(`/app/videoChat/${roomId}`, dataToSend)
+    }
     
     return (
         <div className='flex flex-col items-center justify-center gap-4 h-[80%] w-[95%] mx-auto my-auto bg-white'>
@@ -216,11 +279,21 @@ export default function VideoCall({roomId, playerId}) {
             }
 
             
-               
-            <div className={`flex flex-row items-center justify-center w-[90%] h-[80%] gap-8 px-4 ${otherStream===null ? 'hidden':''}`}>
-                <video className='h-full w-2/3 ring-4 ring-black object-cover' ref={videoOther} autoPlay></video>
-                <video className='h-full w-1/3  ring-4 ring-black object-cover' ref={videoSelf} autoPlay muted={true}></video>
-            </div>
+            <div className={`flex bg-black flex-col items-center justify-center w-full h-[100%] gap-2 ${otherStream===null ? 'hidden':''}`}>
+                <div className={`flex flex-row items-center justify-center w-[100%] h-full ${otherStream===null ? 'hidden':''}`}>
+                    <span className='absolute top-8 left-5 bg-white text-black w-max px-2 font-[Poppins] text-sm rounded-sm'>Hrishabh</span>
+                    <video className='h-full w-[60%] object-cover' ref={videoOther} autoPlay></video>
+                    
+                    <div className='flex flex-col items-center justify-start h-full w-[40%] gap-4'>
+                        <span className='absolute top-8 right-5 bg-white text-black w-max px-2 font-[Poppins] text-sm rounded-sm'>You</span>
+                        <video className='h-[100%] w-full object-cover' ref={videoSelf} autoPlay muted={true}></video>
+                    </div>
+                </div>
+                <span onClick={handleEndCall} className='absolute bottom-2 flex flex-row justify-center items-center gap-2 bg-white text-black border-2 border-black box-shadow px-5 py-1 cursor-pointer'>
+                    <PiPhoneFill className='text-red-500 text-[20px] rotate-[135deg] '/>
+                    <h1 className='text-xs font-semibold font-[CenturyGothic]'>End Call</h1>
+                </span>
+            </div>   
             
         </div>
     )
