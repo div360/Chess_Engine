@@ -11,3 +11,18 @@
     animation-iteration-count: infinite;
     animation-timing-function: linear;
 }
+
+@keyframes shake-2 {
+    0% { transform: translateX(0);}
+    25% { transform: translateX(-5px);}
+    50% { transform: translateX(5px);}
+    75% { transform: translateX(-5px);}
+    100% { transform: translateX(0);}
+}
+
+.animate-shake-2{
+    animation: shake-2 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-delay: 0.1s;
+}
