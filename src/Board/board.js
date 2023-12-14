@@ -261,7 +261,7 @@ function Board({isBlackBoardSet, roomId, playerId}) {
                 {/* Chat and video call UI start here */}
 
                 
-                    <div className={`rounded-sm flex flex-row items-start absolute top-2 right-10 justify-between self-end h-[27%] w-[25%] gap-5 bg-black ${chessUtils?.call ? "":"hidden"}`}>
+                    <div className={`rounded-sm flex flex-row items-start absolute top-2 right-10 justify-between self-end h-[27%] w-[25%] gap-5 ${chessUtils?.bg} ${chessUtils?.call ? "":"hidden"}`}>
                         <VideoCall roomId={roomId} playerId={playerId}/>
                     </div>
                 
@@ -274,10 +274,10 @@ function Board({isBlackBoardSet, roomId, playerId}) {
                     animate={{ opacity: 1, height: '6%' }}
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 1, ease: 'easeInOut', type: "tween" }}
-                    className="flex flex-row items-start fixed bottom-0 right-10 justify-between self-end h-[6%] w-[25%] gap-5 bg-black select-none"
+                    className={`flex flex-row items-start fixed bottom-0 right-10 justify-between self-end h-[6%] w-[25%] gap-5 ${chessUtils?.bg} select-none`}
                   >
                     <div className="flex flex-row items-center justify-between h-full w-full px-4">
-                        <IoMdArrowDropupCircle onClick={()=>setIsCollapsed(false)} className="rounded-full h-8 w-8 absolute bg-black text-white -top-[10px] left-[50%] cursor-pointer"/>
+                        <IoMdArrowDropupCircle onClick={()=>setIsCollapsed(false)} className={`rounded-full h-8 w-8 absolute ${chessUtils?.bg} text-white -top-[10px] left-[50%] cursor-pointer`}/>
             
                             <div className="flex flex-row items-center justify-start gap-4">
                                 <IoPersonSharp className={`text-[23px] text-white`} />
@@ -295,13 +295,13 @@ function Board({isBlackBoardSet, roomId, playerId}) {
                         animate={{ opacity: 1, height: '70%' }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 1, ease: 'easeInOut', type: "tween" }}
-                        className="flex flex-row items-start fixed bottom-0 right-10 justify-between self-end h-[70%] w-[25%] gap-5 bg-black select-none"
+                        className={`flex flex-row items-start fixed bottom-0 right-10 justify-between self-end h-[6%] w-[25%] gap-5 ${chessUtils?.bg} select-none`}
                     >
                         <div className="flex flex-col items-center justify-start h-full w-[95%] mx-auto">
                             
                                 <div className="flex flex-row items-center justify-between h-[8%] w-full px-4">
                             
-                                <IoMdArrowDropupCircle onClick={()=>setIsCollapsed(true)} className="rotate-180 rounded-full h-8 w-8 absolute bg-black text-white -top-[10px] left-[50%] cursor-pointer"/>
+                                <IoMdArrowDropupCircle onClick={()=>setIsCollapsed(true)} className={`rotate-180 rounded-full h-8 w-8 absolute ${chessUtils?.bg} text-white -top-[10px] left-[50%] cursor-pointer`}/>
 
                                     <div className="flex flex-row items-center justify-start gap-4">
                                         <IoPersonSharp className={`text-[23px] text-white`} />
@@ -324,7 +324,7 @@ function Board({isBlackBoardSet, roomId, playerId}) {
 
                                 <div className="flex flex-row items-center justify-between w-full h-[8%] bg-white mb-4 px-4">
                                     <input onKeyDown={handleKeyPressMessage} onChange={handleMessageChange} name="chatMessage" value={chatMessage} placeholder={"Type a message..."} className="placeholder:text-slate-400 font-semibold text-lg h-full bg-white w-full outline-none" autoComplete={"off"}></input>
-                                    <RiSendPlaneFill onClick={sendMessage} size={35} className="text-black cursor-pointer"/>
+                                    <RiSendPlaneFill onClick={sendMessage} size={35} className={`${chessUtils?.text} cursor-pointer`}/>
                                 </div>
                             </div>
                         </motion.div>

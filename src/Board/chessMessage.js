@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { ChessUtilsContext } from '../Context/context';
 
 const breakMessage = (message) => {
   const words = message.split(' ');
@@ -35,9 +36,12 @@ const breakMessage = (message) => {
 
 
 const ChessLeftMessage = ({ message }) => {
+
+  const {chessUtils} = useContext(ChessUtilsContext)
+
   return (
     <div className={`text-white px-4 py-2 h-max w-full flex justify-start font-semibold`}>
-      <h1 className='max-w-[60%] text-left w-max bg-black px-2 py-2 rounded-lg rounded-bl-none overflow-x-hidden'>
+      <h1 className={`max-w-[60%] text-left w-max ${chessUtils?.bg} px-2 py-2 rounded-lg rounded-bl-none overflow-x-hidden`}>
         {breakMessage(message)}
       </h1>
     </div>
