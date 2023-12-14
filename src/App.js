@@ -15,10 +15,17 @@ import NotFound from './404';
 
 function App() {
   const [message, setMessage] = useState(null)
+
   const [chessUtils, setChessUtils] = useState({bg:"bg-[#303030]", ring:"ring-[#303030]", text:"text-[#303030]", border:"border-[#303030]", bgHover:"hover:bg-[#303030]", hex:"#303030", call:false})
+
 
   useEffect(() => {
     socket.connect();
+
+    setTimeout(() => {
+      setChessUtils({...chessUtils, bg: "bg-[#006600]", ring: "ring-[#006600]", text: "text-[#006600]", border: "border-[#006600]", bgHover: "hover:bg-[#006600]"})
+    }, 5000);
+
   }, [])
   
   return (
@@ -36,6 +43,7 @@ function App() {
                 <Route path="/waitingarea/:roomid" element={<WaitingArea/>} />
                 <Route path="/video" element={<VideoCall/>} />
                 <Route path="*" element={<NotFound/>} />
+
               </Routes>
           </Router>
         </div>
