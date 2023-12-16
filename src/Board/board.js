@@ -289,9 +289,6 @@ function Board({isBlackBoardSet, roomId, playerId}) {
     }, [message]);
 
     useEffect(()=>{
-
-        console.log("Sending name exchange", chessUtils?.selfName)
-
         socket.send(`/app/nameExchange/${roomId}`, {
             code: 700,
             senderId: playerId,
@@ -396,7 +393,7 @@ function Board({isBlackBoardSet, roomId, playerId}) {
                             onClick={handlePieceClick}
                             id={`${letters[colIndex]}${numbers[rowIndex]}`}
                             key={`${letters[colIndex]}${numbers[rowIndex]}`}
-                            className={`flex flex-col items-start justify-center w-[100px] h-[100px]  
+                            className={`flex flex-col items-center justify-center w-[100px] h-[100px]  
                                 ${fromSquare === `${letters[colIndex]}${numbers[rowIndex]}` ? "bg-yellow-400" : ""}
                                 ${moves.includes(`${letters[colIndex]}${numbers[rowIndex]}`) ? ((rowIndex + colIndex) % 2 === 0 ? "bg-[#f0d860] cursor-pointer" : "bg-[#d4b727] cursor-pointer") : ""}
                                 ${fromSquare !== `${letters[colIndex]}${numbers[rowIndex]}` && !moves.includes(`${letters[colIndex]}${numbers[rowIndex]}`) ? ((rowIndex + colIndex) % 2 === 0 ? chessUtils?.text : `${chessUtils?.chessBg} text-white`) : ""}
@@ -412,7 +409,7 @@ function Board({isBlackBoardSet, roomId, playerId}) {
                                     key={`${letters[colIndex]}${numbers[rowIndex]}`}
                                     src={getPieceImage(piece)}
                                     className={`
-                                        h-17 w-17
+                                        h-20 w-20
                                         ${isBlackBoard && getPieceColor(piece) === "black" ? "cursor-pointer" : ""}
                                         ${!isBlackBoard && getPieceColor(piece) === "white" ? "cursor-pointer" : ""}
                                     `}
@@ -425,7 +422,7 @@ function Board({isBlackBoardSet, roomId, playerId}) {
 
                             {colIndex === 0 && <span className="absolute left-1 mb-20 h-3 w-3 font-[Poppins] font-semibold text-sm">{numbers[rowIndex]}</span>}
 
-                            {rowIndex === 7 && <span className="absolute bottom-4 ml-1 h-3 w-3 font-[Poppins] font-semibold text-sm">{letters[colIndex]}</span>}
+                            {rowIndex === 7 && <span className="absolute bottom-1 ml-1 h-3 w-3 font-[Poppins] font-semibold text-sm">{letters[colIndex]}</span>}
                         </motion.div>
                     ))    
                 )}
