@@ -15,8 +15,7 @@ import NotFound from './404';
 
 function App() {
   const [message, setMessage] = useState(null)
-
-  const [chessUtils, setChessUtils] = useState({bg:"bg-[#303030]", ring:"ring-[#303030]", text:"text-[#303030]", border:"border-[#303030]", bgHover:"hover:bg-[#303030]", hex:"#303030", call:false})
+  const [chessUtils, setChessUtils] = useState({bg:"bg-[#303030]", ring:"ring-[#303030]", text:"text-[#303030]", border:"border-[#303030]", bgHover:"hover:bg-[#303030]", hex:"#303030", chessBg:"bg-[#30303070]", call:false})
 
 
   useEffect(() => {

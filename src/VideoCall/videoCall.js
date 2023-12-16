@@ -246,6 +246,7 @@ export default function VideoCall({roomId, playerId}) {
     
     return (
         <div className={`flex flex-col items-center justify-center gap-4 h-[80%] w-[95%] mx-auto my-auto bg-white`}>
+            <span className="h-1 w-10 bg-white absolute left-[45%] top-2 rounded-md"></span>
             {
                 ((connectionStatus === connStatus.STAGE || otherStream===null) && (initiator)) && <>
                     <PiPhoneCallFill className={`animate-shake-2 ${chessUtils?.text} bg-white rounded-full h-[80px] w-[80px] p-3 ml-1`}/>

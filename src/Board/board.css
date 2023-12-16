@@ -20,3 +20,6 @@
     background-clip: content-box;
   }
   
+.box-shadow-5{
+    box-shadow: 5px -5px 0px 0px #000000;
+}
