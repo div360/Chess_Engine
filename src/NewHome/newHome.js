@@ -59,6 +59,9 @@ export default function NewHome() {
     const playText = "Play. Now.";
     const playLetters = playText.split(" ");
 
+    const titleSide = "PLAY. CHAT. CONNECT."
+    const titleSideLetters = titleSide.split(" ");
+
     const child =(i)=>({
         visible: {
             opacity: 1,
@@ -216,6 +219,32 @@ export default function NewHome() {
         }
     }
 
+    const animateText =(i)=>({
+        visible: {
+            opacity: 1,
+            // scale:1,
+            y: 0,
+            x:0,
+            transition:{
+            delay: 2+i*0.4,
+            duration: 1,
+            type: "spring",
+            damping: 12,
+            stiffness: 100,
+            }
+        },
+        hidden: {
+            opacity: 0,
+            // scale:0.5,
+            y: 20,
+            transition: {
+            type: "spring",
+            damping: 12,
+            stiffness: 100,
+            },
+        }
+    })
+
     const stepGridItems = [
         { id:1 , bgColor: "black", textColor: "white", title: "Play With Friends", description: "Click on the 'Play with Friends' button to kick start a new chess match.", buttonText: "PLAY WITH FRIENDS" },
         { id:2 , bgColor: "black", textColor: "white", title: "Register", description: "Fill in the required details to register for the match and click on 'Generate' to receive your unique match link.", buttonText: "GENERATE" },
@@ -234,11 +263,11 @@ export default function NewHome() {
     const borderColorLeft=(index)=> index===0?'border-r-[2px] border-white':index===2?'border-r-[2px] border-black':'';
 
     return (
-        <div className='h-full bg-gradient-to-r from-black via-black to-white'>
-        <div className="h-screen bg-gradient-to-r from-black via-black to-white grid grid-cols-12">
+        <div className='h-full bg-gradient-to-r from-black via-black to-white select-none'>
+        <div className="h-full bg-gradient-to-r from-black via-black to-white grid grid-cols-12">
             <div className="bg-black w-full col-span-6 pb-10">
                 <div className="mt-6 min-h-[2rem] min-w-full flex flex-row">
-                    <motion.button variants={fadeInAnimation(1.3)} initial="hidden" animate="visible" className="ml-16 py-1 px-4 flex flex-col justify-center items-center border-[0.1rem] border-white font-[CenturyGothic] text-sm text-white hover:border-black hover:text-black hover:bg-white">Choose your theme</motion.button>
+                    <motion.div variants={fadeInAnimation(1.3)} initial="hidden" animate="visible" className="ml-16 py-1 px-4 flex flex-col justify-center items-center border-[0.1rem] border-white font-[CenturyGothic] text-sm text-white ">Choose your theme</motion.div>
                         <motion.div variants={paletteAnimation} initial="hidden" animate="visible" className='w-max overflow-hidden flex justify-center'>
                             <div className="min-h-[1.5rem] max-h-[1.8rem] flex flex-row justify-center items-center">
                                 <motion.div whileHover={{scale:1.2}} className="ml-10 min-h-[1.5rem] max-h-[1.8rem] min-w-[2vw] bg-red-500 hover:border-2 hover:border-white"></motion.div>
@@ -287,16 +316,24 @@ export default function NewHome() {
             </div>
             <div className="bg-white col-span-6 pb-10">
                 <div className='mt-8 min-w-full flex flex-col justify-center items-center'>
-                    <motion.div  variants={fadeInAnimation(2.3)} initial="hidden" animate="visible" whileHover={{scale:1.5}} className='min-w-[5vw] grid grid-cols-5 gap-4'>
+                    {/* <motion.div  variants={fadeInAnimation(2.3)} initial="hidden" animate="visible" whileHover={{scale:1.5}} className='min-w-[5vw] grid grid-cols-5 gap-4'>
                         <div className='text-3xl font-[CenturyGothic] font-bold'>F</div>
                         <div className='text-3xl font-[CenturyGothic] font-bold'>I</div>
                         <div className='text-3xl font-[CenturyGothic] font-bold'>R</div>
                         <div className='text-3xl font-[CenturyGothic] font-bold'>S</div>
                         <div className='text-3xl font-[CenturyGothic] font-bold'>T</div>
-                    </motion.div>
-                        <motion.div variants={fadeInAnimation(2.3)} initial="hidden" animate="visible" whileHover={{scale:1.3}} className='text-5xl font-[CenturyGothic] font-bold tracking-widest'>MOVE</motion.div>
-                    <motion.img variants={fadeInAnimation(2.3)} initial="hidden" animate="visible" src="./chessfront.svg" className='mt-10 xl:h-52 lg:h-24 md:h-16 sm:h-16  mb-24' />
-                    <motion.div variants={fadeInAndExpandAnimation(2.3)} initial="hidden" animate="visible" className='w-full flex flex-col justify-center items-center gap-16'>
+                    </motion.div> */}
+                    {/* <motion.img variants={fadeInAnimation(2.3)} initial="hidden" animate="visible" src="./chessfront.svg" className='mt-10 xl:h-52 lg:h-24 md:h-16 sm:h-16  mb-24' /> */}
+                    <div className='flex flex-row'>
+                    {titleSideLetters.map((letter, index) => (
+                            <motion.div id='title' variants={animateText(index)} initial="hidden" animate="visible" className='mr-3 text-2xl font-[CenturyGothic] tracking-wider'>{letter}</motion.div>
+                    ))}
+                    </div>
+                    {/* <motion.div id="title" variants={animateText(2.3)} initial="hidden" animate="visible" whileHover={{scale:1.3}} className='text-2xl font-[CenturyGothic] tracking-wider'>PLAY. CHAT. CONNECT.</motion.div> */}
+                    <div className='flex flex-col justify-center'>
+                        <motion.img src='assets/bg_assets/cover2.svg' variants={fadeInAnimation(2.3)} initial="hidden" animate="visible" className='mt-10 lg:h-[42vh] sm:h-[20vh] mb-24'></motion.img>
+                    </div>
+                    <motion.div variants={fadeInAndExpandAnimation(2.3)} initial="hidden" animate="visible" className='w-full flex flex-col justify-center items-center gap-12'>
                         <ThemeButton redirect={'/register'} text={"Play with Friends"}/>
                         <ThemeButton redirect={'/coming-soon'} text={"Play with Computer"}/>
                     </motion.div>
