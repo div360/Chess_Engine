@@ -21,6 +21,10 @@ function RegisterSecondUser () {
     
     useEffect(() => {
         socket.connect();
+        const theme = localStorage.getItem('8by8Theme');
+        if(theme !== null && theme !== "undefined") {
+            setChessUtils(JSON.parse(theme));
+        }
       }, [])
 
     useEffect(() => {

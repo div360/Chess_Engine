@@ -11,11 +11,15 @@ import { ChessLeftMessage, ChessRightMessage } from "./chessMessage";
 import ChessAnimation from "../Register/chessAnimation";
 import { motion, AnimatePresence } from 'framer-motion';
 import VideoCall from "../VideoCall/videoCall";
+import { useParams } from "react-router-dom";
 
-function Board({isBlackBoardSet, roomId, playerId}) {
+function Board({isBlackBoardSet, playerId}) {
+    
+    const {roomId} = useParams();
+
     const fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
-    const {message, setMessage} = useContext(ChessContext)
+    const {message} = useContext(ChessContext)
     
     const piece_color = isBlackBoardSet ? "black" : "white";
 
@@ -44,6 +48,11 @@ function Board({isBlackBoardSet, roomId, playerId}) {
     const [movesHistoryArray, setMovesHistoryArray] = useState([]); // [ {color: "black", from: "e4", to: "e6", piece: "knight", hasCaptured: true, captured: "queen"}, {color: "black", from: "e4", to: "e6", piece: "knight", hasCaptured: false, captured: ""} ]
     const [eliminatedPiecesArray, setEliminatedPiecesArray] = useState([]); // [ {color: "black", piece: "queen"}, {color: "white", piece: "knight"}
 
+
+    const saveToLocalStorage = () => {
+        let timeStamp = new Date().getTime();
+        localStorage.setItem(roomId, JSON.stringify({movesHistoryArray, eliminatedPiecesArray, timeStamp, moveCount, chessUtils}))
+    }
 
     const sendMessage = () => {
         if(chatMessage.trim() === "") return;
@@ -108,8 +117,6 @@ function Board({isBlackBoardSet, roomId, playerId}) {
     }, [isBlackBoard]);
 
     useEffect(() => {
-
-        console.log(fromSquare, toSquare)
         if(fromSquare === null) return;
 
         if(fromSquare !== null){
@@ -149,8 +156,6 @@ function Board({isBlackBoardSet, roomId, playerId}) {
 
     const handlePieceClick = (e) => {
         const square_id = e.target.id;
-
-        console.log("moveCount", moveCount)
 
         if(getPieceAtSquare(square_id) !== null){
             if(getPieceColor(getPieceAtSquare(square_id)) === piece_color){
@@ -233,6 +238,7 @@ function Board({isBlackBoardSet, roomId, playerId}) {
         setFromSquare(null);
         setToSquare(null);
         setMoves([]);
+        saveToLocalStorage();
     }
 
     const addMoveToMovesHistory = (piece_color, from, to, piece, hasCaptured, captured) => {
@@ -245,8 +251,6 @@ function Board({isBlackBoardSet, roomId, playerId}) {
         const from_col = letters.indexOf(from[0]);
         const to_row = numbers.indexOf(parseInt(to[1]));
         const to_col = letters.indexOf(to[0]);
-
-        console.log(from_row, from_col, to_row, to_col)
 
         if (board && board[from_row] && board[from_row][from_col]) {
             const piece = board[from_row][from_col];
@@ -273,11 +277,11 @@ function Board({isBlackBoardSet, roomId, playerId}) {
         if(senderId !== playerId){
             setMoveCount(moveCount + 1);
         }
+        saveToLocalStorage();
     }
 
     useEffect(() => {
         if(message?.code === 200){
-            console.log("message from socket in board", message)
             movePieceFromOpponent(message?.from, message?.to, message?.senderId)
         }
         else if(message?.code === 600){
@@ -385,8 +389,7 @@ function Board({isBlackBoardSet, roomId, playerId}) {
             {/* Chat and video call UI end here */}
 
             {/* Chess Board UI start here */}
-
-            <div className={`grid grid-cols-8 h-[800px] w-[800px] ring-[1px] ${chessUtils.ring} scale-[80%] font-semibold bg-[#f3f3f3]`}>
+            <div className={`grid grid-cols-8 h-[800px] w-[800px] ring-[4px] rounded-sm ring-black scale-[80%] font-semibold bg-[#f3f3f3]`}>
                 {board.map((row, rowIndex) =>
                     row.map((piece, colIndex) => (
                         <motion.div
@@ -422,7 +425,7 @@ function Board({isBlackBoardSet, roomId, playerId}) {
 
                             {colIndex === 0 && <span className="absolute left-1 mb-20 h-3 w-3 font-[Poppins] font-semibold text-sm">{numbers[rowIndex]}</span>}
 
-                            {rowIndex === 7 && <span className="absolute bottom-1 ml-1 h-3 w-3 font-[Poppins] font-semibold text-sm">{letters[colIndex]}</span>}
+                            {rowIndex === 7 && <span className="absolute bottom-[7px] ml-1 h-3 w-3 font-[Poppins] font-semibold text-sm">{letters[colIndex]}</span>}
                         </motion.div>
                     ))    
                 )}
