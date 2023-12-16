@@ -60,28 +60,7 @@ export default function VideoCall({roomId, playerId}) {
             }
             else if(type === 'end'){
                 if(senderId !== message?.senderId){
-                    setConnectionStatus(connStatus.STAGE)
-                    setChessUtils({...chessUtils, call:false})
-                    videoSelf.current.srcObject = null
-                    videoOther.current.srcObject = null
-                    if(simplePeer){
-                        simplePeer?.destroy()
-                        setSimplePeer(null)
-                    }
-                    setOffer(null)
-                    if(selfStream){
-                        selfStream?.getTracks().forEach((track) => {
-                            track.stop();
-                        })
-                        setSelfStream(null)
-                    }
-                    if(otherStream){
-                        otherStream?.getTracks().forEach((track) => {
-                            track.stop();
-                        });
-                        setOtherStream(null)
-                    }
-                    setInitiator(false)
+                    handleEndCall(false)
                 }
             }
         }
@@ -205,7 +184,7 @@ export default function VideoCall({roomId, playerId}) {
         }
     }
 
-    const handleEndCall = () => {
+    const handleEndCall = (isFirst) => {
         setConnectionStatus(connStatus.STAGE)
         setChessUtils({...chessUtils, call:false})
         videoSelf.current.srcObject = null
@@ -228,20 +207,22 @@ export default function VideoCall({roomId, playerId}) {
             setOtherStream(null)
         }
         setInitiator(false)
+        
+        if(isFirst){
+            var dataToSend = {
+                code: 500,
+                messageId : "randomId",
+                roomId: roomId,
+                senderId: senderId,
+                videoMessage: {
+                    data: null,
+                    type: 'end',
+                },
+                timestamp: new Date().getTime()
+            }
 
-        var dataToSend = {
-            code: 500,
-            messageId : "randomId",
-            roomId: roomId,
-            senderId: senderId,
-            videoMessage: {
-                data: null,
-                type: 'end',
-            },
-            timestamp: new Date().getTime()
+            socket.send(`/app/videoChat/${roomId}`, dataToSend)
         }
-
-        socket.send(`/app/videoChat/${roomId}`, dataToSend)
     }
     
     return (
@@ -290,7 +271,7 @@ export default function VideoCall({roomId, playerId}) {
                         <video className={`h-[100%] w-full object-cover`} ref={videoSelf} autoPlay muted={true}></video>
                     </div>
                 </div>
-                <span onClick={handleEndCall} className={`absolute bottom-2 flex flex-row justify-center items-center gap-2 bg-white text-black border-2 ${chessUtils?.border} box-shadow px-5 py-1 cursor-pointer`}>
+                <span onClick={()=>handleEndCall(true)} className={`absolute bottom-2 flex flex-row justify-center items-center gap-2 bg-white text-black border-2 ${chessUtils?.border} box-shadow px-5 py-1 cursor-pointer`}>
                     <PiPhoneFill className={`text-red-500 text-[20px] rotate-[135deg] `}/>
                     <h1 className={`text-xs font-semibold font-[CenturyGothic]`}>End Call</h1>
                 </span>

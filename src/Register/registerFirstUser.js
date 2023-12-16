@@ -6,7 +6,7 @@ import { ChessUtilsContext } from '../Context/context';
 
 export default function RegisterFirstUser() {
     
-    const {chessUtils} = useContext(ChessUtilsContext);
+    const {chessUtils, setChessUtils} = useContext(ChessUtilsContext);
 
     const navigate = useNavigate()
 
@@ -34,6 +34,7 @@ export default function RegisterFirstUser() {
             })
             .then(response => response.json())
             .then(data => {
+                setChessUtils({...chessUtils, selfName: user.name})
                 navigate('/invite', {state: {roomId: data.roomId, player1Id: data.player1Id, player2Id: data.player2Id, player1Color: data.player1Color}}, {replace: true})
             })
             .catch(error => {

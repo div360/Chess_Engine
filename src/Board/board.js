@@ -288,6 +288,17 @@ function Board({isBlackBoardSet, roomId, playerId}) {
         }
     }, [message]);
 
+    useEffect(()=>{
+        socket.send(`/app/nameExchange/${roomId}`, {
+            code: 700,
+            senderId: playerId,
+            message: {
+                name: chessUtils?.selfName
+            },
+            roomId: roomId
+        })
+    }, [])
+
     return (
         <div className="flex flex-col justify-center items-center h-screen font-[Athiti] bg-white overflow-clip select-none">
 
@@ -320,13 +331,13 @@ function Board({isBlackBoardSet, roomId, playerId}) {
                         <span className="h-1 w-10 bg-white absolute left-[50%] top-2 rounded-md"></span>
                         <div className="flex flex-row items-center justify-start gap-4">
                             <IoPersonSharp className={`text-[23px] text-white`} />
-                            <h1 className="text-white font-[CenturyGothic] font-semibold text-sm">Hrishabh Tiwari</h1>
+                            <h1 className="text-white font-[CenturyGothic] font-semibold text-sm">{chessUtils?.opponentName}</h1>
                         </div>
                         <PiPhoneCallFill className={`text-[23px] text-white`} />
                     </div>
                 </motion.div>
             }
-
+  
             {
                 !isCollapsed?.chat && <motion.div
                     key="expanded"
@@ -342,7 +353,7 @@ function Board({isBlackBoardSet, roomId, playerId}) {
                             <span className="h-1 w-10 bg-white absolute left-[50%] top-2 rounded-md"></span>
                             <div className="flex flex-row items-center justify-start gap-4">
                                 <IoPersonSharp className={`text-[23px] text-white`} />
-                                <h1 className="text-white font-[CenturyGothic] font-semibold text-sm">Hrishabh Tiwari</h1>
+                                <h1 className="text-white font-[CenturyGothic] font-semibold text-sm">{chessUtils?.opponentName}</h1>
                             </div>
                             <PiPhoneCallFill onClick={(e)=>{e.stopPropagation(); setChessUtils({...chessUtils, call:true})}} className={`text-[23px] text-white cursor-pointer`} />
                         </div>
@@ -382,7 +393,7 @@ function Board({isBlackBoardSet, roomId, playerId}) {
                             onClick={handlePieceClick}
                             id={`${letters[colIndex]}${numbers[rowIndex]}`}
                             key={`${letters[colIndex]}${numbers[rowIndex]}`}
-                            className={`flex flex-col items-start justify-center w-[100px] h-[100px]  
+                            className={`flex flex-col items-center justify-center w-[100px] h-[100px]  
                                 ${fromSquare === `${letters[colIndex]}${numbers[rowIndex]}` ? "bg-yellow-400" : ""}
                                 ${moves.includes(`${letters[colIndex]}${numbers[rowIndex]}`) ? ((rowIndex + colIndex) % 2 === 0 ? "bg-[#f0d860] cursor-pointer" : "bg-[#d4b727] cursor-pointer") : ""}
                                 ${fromSquare !== `${letters[colIndex]}${numbers[rowIndex]}` && !moves.includes(`${letters[colIndex]}${numbers[rowIndex]}`) ? ((rowIndex + colIndex) % 2 === 0 ? chessUtils?.text : `${chessUtils?.chessBg} text-white`) : ""}
@@ -398,7 +409,7 @@ function Board({isBlackBoardSet, roomId, playerId}) {
                                     key={`${letters[colIndex]}${numbers[rowIndex]}`}
                                     src={getPieceImage(piece)}
                                     className={`
-                                        h-17 w-17
+                                        h-20 w-20
                                         ${isBlackBoard && getPieceColor(piece) === "black" ? "cursor-pointer" : ""}
                                         ${!isBlackBoard && getPieceColor(piece) === "white" ? "cursor-pointer" : ""}
                                     `}
@@ -411,7 +422,7 @@ function Board({isBlackBoardSet, roomId, playerId}) {
 
                             {colIndex === 0 && <span className="absolute left-1 mb-20 h-3 w-3 font-[Poppins] font-semibold text-sm">{numbers[rowIndex]}</span>}
 
-                            {rowIndex === 7 && <span className="absolute bottom-4 ml-1 h-3 w-3 font-[Poppins] font-semibold text-sm">{letters[colIndex]}</span>}
+                            {rowIndex === 7 && <span className="absolute bottom-1 ml-1 h-3 w-3 font-[Poppins] font-semibold text-sm">{letters[colIndex]}</span>}
                         </motion.div>
                     ))    
                 )}

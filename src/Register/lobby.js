@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import ChessAnimation from "./chessAnimation";
 import { motion , useAnimate } from "framer-motion";
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ChessContext } from '../Context/context';
+import { ChessContext, ChessUtilsContext } from '../Context/context';
 import socket from '../Socket/socket';
 import './lobby.css';
 
@@ -15,6 +15,7 @@ export default function NewLobby() {
     const waitText = "Waiting for opponent to join"
     const wait = waitText.split(' ')
 
+    const {chessUtils, setChessUtils} = useContext(ChessUtilsContext);
     const navigate = useNavigate();
     const {message, setMessage} = useContext(ChessContext)
     const location = useLocation();
@@ -27,14 +28,15 @@ export default function NewLobby() {
       200: "New Move",
       300: "Subscribed to Room",
       400: "Game Over",
-      500: "Video Call"
+      500: "Video Call",
+      600: "Chat Message",
+      700: "Opponent Name"
     }
 
 
     useEffect(() => {
       socket.subscribe(`/topic/${roomId}`, (socket_data) => {
         const parsedData = JSON.parse(socket_data?.body);
-        console.log(parsedData)
 
         const code = parsedData?.code;
 
@@ -56,14 +58,20 @@ export default function NewLobby() {
 
         if(code === 500){
           const { videoMessage, senderId } = parsedData;
-          console.log(parsedData)
           setMessage({code: 500, roomId: roomId, senderId:senderId, message: videoMessage})
         }
 
         if(code === 600){
           const { message, senderId } = parsedData;
-          console.log(parsedData)
           setMessage({code: 600, roomId: roomId, senderId:senderId, message: message?.message})
+        }
+
+        if(code === 700){
+          const { message, senderId } = parsedData;
+          if(senderId!==playerId){
+            setChessUtils({...chessUtils, opponentName: message?.name})
+          }
+          setMessage({code: 700, roomId: roomId, senderId:senderId, message: message?.name})
         }
         
       });
@@ -72,7 +80,6 @@ export default function NewLobby() {
 
     useEffect(() => {
         if(message?.code === 100){
-            // navigate('/video', {state: {roomId: roomId, playerId: playerId}})
             navigate(`/playground/${roomId}`, {state: {isBlackBoard:color?.toLowerCase()==="white"?false:true, roomId: roomId, playerId: playerId}})
         }
     }, [message])
