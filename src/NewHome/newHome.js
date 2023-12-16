@@ -1,15 +1,19 @@
 import './newHome.css';
-import MobileHome from './mobileHome';
-import {useRef,useState, useEffect} from 'react';
+import {useRef, useEffect} from 'react';
 import { useMediaQuery } from 'react-responsive';
 import ThemeButton from '../Button/themebutton'
 import { IoIosArrowRoundForward  } from "react-icons/io";
 import {motion, useInView, useAnimation} from 'framer-motion';
 import { useNavigate } from "react-router";
-export default function NewHome() {
+import {useRef, useEffect, useContext} from 'react';
+import ThemeButton from '../Button/themebutton'
+import { IoIosArrowRoundForward  } from "react-icons/io";
+import { ChessUtilsContext } from '../Context/context';
 
+export default function NewHome() {
     const isMobile = useMediaQuery({ query: '(max-width: 760px)' })
     const navigate = useNavigate()
+    const {chessUtils, setChessUtils} = useContext(ChessUtilsContext);
     const steps = useRef(null);
     const numberGrid = useRef(null);
     const featuresGrid = useRef(null);
@@ -23,28 +27,34 @@ export default function NewHome() {
     const isVisibleNumberGrid = useInView(numberGrid, {once:true})
     const isVisibleFeaturesGrid = useInView(featuresGrid, {once:true, amount:'some'})
     const isVisibleFeaturesGrid2 = useInView(featuresGrid2, {once:true})
+
+    useEffect(()=>{
+        setChessUtils({
+            bg:"bg-[#004000]", ring:"ring-[#004000]", 
+            text:"text-[#004000]", border:"border-[#004000]", bgHover:"hover:bg-[#004000]", 
+            hex:"#004000", chessBg:"bg-[#00400098]", call:false,
+            selfName:"", opponentName:""
+        })
+    }, [])
+
     useEffect(() => {
         if(isVisible){
             animationControls.start("visible");
-            console.log("vdisible")
         }
     }, [isVisible])
 
     useEffect(() => {
         if(isVisibleNumberGrid){
             animationControls.start("visible");
-            console.log("numbergrid")
         }
     }, [isVisibleNumberGrid])
 
     useEffect(() => {
         if(isVisibleFeaturesGrid){
             featureAnimationControls.start("visible");
-            console.log("featuresgrid")
         }
         if(isVisibleFeaturesGrid2){
             featureAnimationControls2.start("visible");
-            console.log("featuresgrid2")
         }
     }, [isVisibleFeaturesGrid, isVisibleFeaturesGrid2])
     

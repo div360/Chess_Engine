@@ -68,6 +68,7 @@ export default function NewLobby() {
 
         if(code === 700){
           const { message, senderId } = parsedData;
+
           if(senderId!==playerId){
             setChessUtils({...chessUtils, opponentName: message?.name})
           }

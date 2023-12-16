@@ -32,7 +32,6 @@ function Invite(){
     }
 
     const handlePlay = () => {
-        console.log("Player Id from Invite: ", player1Id);
         navigate('/lobby', {state: {roomId: roomId, playerId: player1Id, color: player1Color}})
     }
 
