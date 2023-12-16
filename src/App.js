@@ -40,7 +40,6 @@ function App() {
                 <Route path="/playground/:roomid" element={<Playground/>} />
                 <Route path="/waitingarea/:roomid" element={<WaitingArea/>} />
                 <Route path="*" element={<NotFound/>} />
-
               </Routes>
           </Router>
         </div>
