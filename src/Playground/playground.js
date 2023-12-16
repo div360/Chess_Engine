@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import Board from '../Board/board'
+import { ChessUtilsContext } from '../Context/context'
+import socket from '../Socket/socket'
 
 function Playground() {
     const location = useLocation()
@@ -8,10 +10,6 @@ function Playground() {
     const isBlackBoard = location?.state?.isBlackBoard
     const roomId = location?.state?.roomId;
     const playerId = location?.state?.playerId;
-
-    console.log("isBlackBoard", isBlackBoard)
-    console.log("roomId", roomId)
-    console.log("playerId", playerId)
 
     const [start, setStart] = useState(false)
 

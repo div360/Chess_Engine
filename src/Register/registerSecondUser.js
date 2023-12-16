@@ -7,7 +7,7 @@ import { ChessUtilsContext } from "../Context/context";
 
 function RegisterSecondUser () {
 
-    const {chessUtils} = useContext(ChessUtilsContext);
+    const {chessUtils, setChessUtils} = useContext(ChessUtilsContext);
     const navigate = useNavigate();
     const params = useParams();
     const [subscribe, setSubscribe] = useState(false)
@@ -25,6 +25,7 @@ function RegisterSecondUser () {
 
     useEffect(() => {
         if(subscribe) {
+            setChessUtils({...chessUtils, selfName: user.name})
             navigate('/lobby', {state: {roomId: params.roomId, playerId: params.playerId, color: color}})
         }
     }, [subscribe])

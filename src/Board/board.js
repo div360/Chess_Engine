@@ -288,6 +288,20 @@ function Board({isBlackBoardSet, roomId, playerId}) {
         }
     }, [message]);
 
+    useEffect(()=>{
+
+        console.log("Sending name exchange", chessUtils?.selfName)
+
+        socket.send(`/app/nameExchange/${roomId}`, {
+            code: 700,
+            senderId: playerId,
+            message: {
+                name: chessUtils?.selfName
+            },
+            roomId: roomId
+        })
+    }, [])
+
     return (
         <div className="flex flex-col justify-center items-center h-screen font-[Athiti] bg-white overflow-clip select-none">
 
@@ -320,13 +334,13 @@ function Board({isBlackBoardSet, roomId, playerId}) {
                         <span className="h-1 w-10 bg-white absolute left-[50%] top-2 rounded-md"></span>
                         <div className="flex flex-row items-center justify-start gap-4">
                             <IoPersonSharp className={`text-[23px] text-white`} />
-                            <h1 className="text-white font-[CenturyGothic] font-semibold text-sm">Hrishabh Tiwari</h1>
+                            <h1 className="text-white font-[CenturyGothic] font-semibold text-sm">{chessUtils?.opponentName}</h1>
                         </div>
                         <PiPhoneCallFill className={`text-[23px] text-white`} />
                     </div>
                 </motion.div>
             }
-
+  
             {
                 !isCollapsed?.chat && <motion.div
                     key="expanded"
@@ -342,7 +356,7 @@ function Board({isBlackBoardSet, roomId, playerId}) {
                             <span className="h-1 w-10 bg-white absolute left-[50%] top-2 rounded-md"></span>
                             <div className="flex flex-row items-center justify-start gap-4">
                                 <IoPersonSharp className={`text-[23px] text-white`} />
-                                <h1 className="text-white font-[CenturyGothic] font-semibold text-sm">Hrishabh Tiwari</h1>
+                                <h1 className="text-white font-[CenturyGothic] font-semibold text-sm">{chessUtils?.opponentName}</h1>
                             </div>
                             <PiPhoneCallFill onClick={(e)=>{e.stopPropagation(); setChessUtils({...chessUtils, call:true})}} className={`text-[23px] text-white cursor-pointer`} />
                         </div>
