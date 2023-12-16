@@ -13,7 +13,7 @@ export default function ChessAnimation() {
                     <div key={i} className='flex flex-row items-center justify-between w-full h-max  px-4'>
                     {
                         Array(45).fill().map((_, index)=>(
-                            <span key={index + i} className={`h-[2px] w-[2px] rounded-full ${chessUtils.bg} shadow`}></span>
+                            <span key={index + i} className={`h-[2px] w-[2px] rounded-full ${chessUtils?.bg} shadow`}></span>
                             ))
                     }
                     </div>

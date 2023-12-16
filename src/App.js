@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Playground from './Playground/playground';
 import Invite from './Invite/invite';
 import RegisterFirstUser from './Register/registerFirstUser';
-import WaitingArea from './Register/waitingArea';
 import socket from './Socket/socket';
 import RegisterSecondUser from './Register/registerSecondUser';
 import {ChessContext, ChessUtilsContext} from './Context/context';
@@ -14,16 +13,28 @@ import NewLobby from './Register/lobby';
 
 function App() {
   const [message, setMessage] = useState(null)
-  const [chessUtils, setChessUtils] = useState({
-            bg:"bg-[#303030]", ring:"ring-[#303030]", 
-            text:"text-[#303030]", border:"border-[#303030]", bgHover:"hover:bg-[#303030]", 
-            hex:"#303030", chessBg:"bg-[#30303070]", call:false,
-            selfName:"", opponentName:""
-          })
+  const [chessUtils, setChessUtils] = useState(null)
 
+  useEffect(() => {
+    if (chessUtils === null) {
+      const theme = localStorage.getItem('8by8Theme');
+      if (theme !== null && theme !== "undefined") {
+        setChessUtils(JSON.parse(theme));
+      }
+      return;
+    }
+    else if (chessUtils?.opponentName === "") {
+      localStorage.setItem('8by8Theme', JSON.stringify(chessUtils));
+    }
+  
+  }, [chessUtils]);
 
   useEffect(() => {
     socket.connect();
+    const theme = localStorage.getItem('8by8Theme');
+    if(theme!==null && theme !== "undefined"){
+      setChessUtils(JSON.parse(theme));
+    }
   }, [])
   
   return (
@@ -37,8 +48,7 @@ function App() {
                 <Route path='/invite' element={<Invite/>} />
                 <Route path='/join/:roomId/:playerId' element={<RegisterSecondUser/>} />
                 <Route path='/lobby' element={<NewLobby/>} />
-                <Route path="/playground/:roomid" element={<Playground/>} />
-                <Route path="/waitingarea/:roomid" element={<WaitingArea/>} />
+                <Route path="/playground/:roomId" element={<Playground/>} />
                 <Route path="*" element={<NotFound/>} />
               </Routes>
           </Router>
