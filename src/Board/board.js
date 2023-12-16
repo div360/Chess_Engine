@@ -38,7 +38,7 @@ function Board({isBlackBoardSet, roomId, playerId}) {
     const {chessUtils, setChessUtils} = useContext(ChessUtilsContext);
 
 
-    const [isCollapsed, setIsCollapsed] = useState({chat:true, movesHistory:true});
+    const [isCollapsed, setIsCollapsed] = useState({chat:false, movesHistory:false});
     const [chatMessage, setChatMessage] = useState("");
     const [chatMessageArray, setChatMessageArray] = useState([]); // [ {senderId: "randomId", message: "message"}, {senderId: "randomId", message: "message"} ]
     const [movesHistoryArray, setMovesHistoryArray] = useState([]); // [ {color: "black", from: "e4", to: "e6", piece: "knight", hasCaptured: true, captured: "queen"}, {color: "black", from: "e4", to: "e6", piece: "knight", hasCaptured: false, captured: ""} ]
