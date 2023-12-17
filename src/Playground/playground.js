@@ -1,8 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, {  useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import Board from '../Board/board'
-import { ChessUtilsContext } from '../Context/context'
-import socket from '../Socket/socket'
 
 function Playground() {
     const location = useLocation()
