@@ -23,9 +23,9 @@ export default function NewHome() {
 
     useEffect(()=>{
         setChessUtils({
-            bg:"bg-[#004000]", ring:"ring-[#004000]", 
-            text:"text-[#004000]", border:"border-[#004000]", bgHover:"hover:bg-[#004000]", 
-            hex:"#004000", chessBg:"bg-[#00400098]", call:false,
+            bg:"bg-[#303030]", ring:"ring-[#303030]", 
+            text:"text-[#303030]", border:"border-[#303030]", bgHover:"hover:bg-[#303030]", 
+            hex:"#303030", chessBg:"bg-[#30303098]", call:false,
             selfName:"", opponentName:""
         })
     }, [])
