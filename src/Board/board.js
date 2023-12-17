@@ -17,9 +17,7 @@ function Board({isBlackBoardSet, playerId}) {
     
     const {roomId} = useParams();
 
-    const fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-
-    const {message} = useContext(ChessContext)
+    const {message, setMessage} = useContext(ChessContext)
     
     const piece_color = isBlackBoardSet ? "black" : "white";
 
@@ -27,7 +25,7 @@ function Board({isBlackBoardSet, playerId}) {
     const [moveCount, setMoveCount] = useState(0);
 
     const [board, setBoard] = useState([]);
-    const [fen, setFen] = useState(fenString);
+    const [fen, setFen] = useState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
     
     const [letters, setLetters] = useState(["a", "b", "c", "d", "e", "f", "g", "h"]);
     const [numbers, setNumbers] = useState([8, 7, 6, 5, 4, 3, 2, 1]);
@@ -51,7 +49,32 @@ function Board({isBlackBoardSet, playerId}) {
 
     const saveToLocalStorage = () => {
         let timeStamp = new Date().getTime();
-        localStorage.setItem(roomId, JSON.stringify({movesHistoryArray, eliminatedPiecesArray, timeStamp, moveCount, chessUtils}))
+        var dataToSend = {
+            code: 800,
+            messageId : "randomId",
+            roomId: roomId,
+            senderId: playerId,
+            chessData: {
+                moveHistory : movesHistoryArray,
+                capturedPieces : eliminatedPiecesArray,
+                moveCount : moveCount,
+                timeStamp : timeStamp,
+                fenString : isBlackBoard ? reverseFen(boardToFen(board)) : boardToFen(board)
+            },
+            timestamp: new Date().getTime()
+        }
+
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/updateChessData`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dataToSend)
+        }).then(res => res.json()).then(data => {
+            console.log(data);
+        }).catch(err => {
+            console.log(err);
+        })
     }
 
     const sendMessage = () => {
@@ -105,16 +128,14 @@ function Board({isBlackBoardSet, playerId}) {
 
     useEffect(() => {
         if(isBlackBoard === false){
-            setFen(fenString);
-            setBoard(fenToBoard(fenString));
+            setBoard(fenToBoard(fen));
         }
         else{
             setNumbers([1, 2, 3, 4, 5, 6, 7, 8]);
-            const reversedFenString = reverseFen(fenString);
-            setFen(reversedFenString);
+            const reversedFenString = reverseFen(fen);
             setBoard(fenToBoard(reversedFenString));
         }
-    }, [isBlackBoard]);
+    }, [isBlackBoard, fen]);
 
     useEffect(() => {
         if(fromSquare === null) return;
@@ -197,8 +218,6 @@ function Board({isBlackBoardSet, playerId}) {
         const to_row = numbers.indexOf(parseInt(to[1]));
         const to_col = letters.indexOf(to[0]);
 
-        console.log(from_row, from_col, to_row, to_col)
-
         if (board && board[from_row] && board[from_row][from_col]) {
             const piece = board[from_row][from_col];
 
@@ -220,14 +239,12 @@ function Board({isBlackBoardSet, playerId}) {
         
         setMoveCount(moveCount + 1);
         
-        var fenToSend = boardToFen(board)
         var messageToSend = {
             code: 200,
             messageId : "randomId",
             roomId: roomId,
             senderId: playerId,
             message: {
-                fen_string: fenToSend, 
                 to: to,
                 from: from
             },
@@ -292,7 +309,97 @@ function Board({isBlackBoardSet, playerId}) {
         }
     }, [message]);
 
+
+    const getAndSendData = () => {
+        
+        
+        socket.socket_client.onConnect = () => {
+            socket.subscribe(`/topic/${roomId}`, (socket_data) => {
+                const parsedData = JSON.parse(socket_data?.body);
+        
+                const code = parsedData?.code;
+        
+                // for start game
+                if(code === 100){
+                  const { message } = parsedData;
+                  setMessage({code: 100, roomId: roomId, message: message?.message})
+                }
+                // for new move
+                if(code === 200){
+                  const { message, senderId } = parsedData;
+                  setMessage({code: 200, roomId: roomId, from: message?.from, to: message?.to, senderId: senderId})
+                }
+                // for subscribed to room
+                if(code === 300){
+                  const { message } = parsedData;
+                  setMessage({code: 300, roomId: roomId, message: message?.message})
+                }
+        
+                if(code === 500){
+                  const { videoMessage, senderId } = parsedData;
+                  setMessage({code: 500, roomId: roomId, senderId:senderId, message: videoMessage})
+                }
+        
+                if(code === 600){
+                  const { message, senderId } = parsedData;
+                  setMessage({code: 600, roomId: roomId, senderId:senderId, message: message?.message})
+                }
+        
+                if(code === 700){
+                  const { message, senderId } = parsedData;
+        
+                  if(senderId!==playerId){
+                    setChessUtils({...chessUtils, opponentName: message?.name})
+                  }
+                  setMessage({code: 700, roomId: roomId, senderId:senderId, message: message?.name})
+                }
+                
+            });
+        }
+
+
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/getChessData/${roomId}`, {}).then(res => res.json()).then(data => {
+            console.log(data)
+            const {player1, player2} = data;
+            if(player1?.id === playerId){
+                setChessUtils({...chessUtils, opponentName: player2?.name})
+            }
+            else{
+                setChessUtils({...chessUtils, opponentName: player1?.name})
+            }
+            if(data?.chessData === null) return;
+            const {moveHistory, capturedPieces, moveCount, fenString} = data?.chessData;   
+            console.log(fenString)
+            if(fenString !== ""){
+                setFen(fenString);
+            }
+
+            if(player1?.id === playerId){
+                if(player1?.color === "black"){
+                    setIsBlackBoard(true);
+                }
+                else{
+                    setIsBlackBoard(false);
+                }
+            }
+            else{
+                if(player2?.color === "black"){
+                    setIsBlackBoard(true);
+                }
+                else{
+                    setIsBlackBoard(false);
+                }
+            }
+
+            setMoveCount(moveCount);
+            setMovesHistoryArray(moveHistory);
+            setEliminatedPiecesArray(capturedPieces);       
+        })
+    }
+
     useEffect(()=>{
+        console.log("playerId", playerId)
+
         socket.send(`/app/nameExchange/${roomId}`, {
             code: 700,
             senderId: playerId,
@@ -301,6 +408,25 @@ function Board({isBlackBoardSet, playerId}) {
             },
             roomId: roomId
         })
+
+        const handleBeforeUnload = () => {
+            localStorage.setItem('isReloading8by8', 'true');
+          };
+
+        const isReloading = localStorage.getItem('isReloading8by8');
+
+        console.log('isReloading', isReloading);
+        if (isReloading==='true') {
+            getAndSendData();
+            localStorage.removeItem('isReloading8by8');
+        }
+        
+        
+        window.addEventListener('beforeunload', handleBeforeUnload);
+    
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
     }, [])
 
     return (
