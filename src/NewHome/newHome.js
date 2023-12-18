@@ -3,9 +3,10 @@ import {useRef, useEffect, useContext} from 'react';
 import ThemeButton from '../Button/themebutton'
 import { IoIosArrowRoundForward  } from "react-icons/io";
 import {motion, useInView, useAnimation} from 'framer-motion';
-import { ChessUtilsContext } from '../Context/context';
+import { ChessExtraContext, ChessUtilsContext } from '../Context/context';
 export default function NewHome() {
 
+    const {chessExtra, setChessExtra} = useContext(ChessExtraContext);
     const {chessUtils, setChessUtils} = useContext(ChessUtilsContext);
     const steps = useRef(null);
     const numberGrid = useRef(null);
@@ -25,9 +26,10 @@ export default function NewHome() {
         setChessUtils({
             bg:"bg-[#303030]", ring:"ring-[#303030]", 
             text:"text-[#303030]", border:"border-[#303030]", bgHover:"hover:bg-[#303030]", 
-            hex:"#303030", chessBg:"bg-[#30303098]", call:false,
-            selfName:"", opponentName:""
+            hex:"#303030", chessBg:"bg-[#30303098]"
         })
+
+        setChessExtra({ call:false, selfName:"", opponentName:""})
     }, [])
 
     useEffect(() => {
