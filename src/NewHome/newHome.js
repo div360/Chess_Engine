@@ -5,12 +5,13 @@ import ThemeButton from '../Button/themebutton'
 import { IoIosArrowRoundForward  } from "react-icons/io";
 import {motion, useInView, useAnimation} from 'framer-motion';
 import { useNavigate } from "react-router";
-import { ChessUtilsContext } from '../Context/context';
+import { ChessUtilsContext, ChessExtraContext } from '../Context/context';
 
 export default function NewHome() {
     const isMobile = useMediaQuery({ query: '(max-width: 760px)' })
     const navigate = useNavigate()
     const {chessUtils, setChessUtils} = useContext(ChessUtilsContext);
+    const {chessExtra, setChessExtra} = useContext(ChessExtraContext);
     const steps = useRef(null);
     const numberGrid = useRef(null);
     const featuresGrid = useRef(null);
@@ -27,11 +28,13 @@ export default function NewHome() {
 
     useEffect(()=>{
         setChessUtils({
-            bg:"bg-[#004000]", ring:"ring-[#004000]", 
-            text:"text-[#004000]", border:"border-[#004000]", bgHover:"hover:bg-[#004000]", 
-            hex:"#004000", chessBg:"bg-[#00400098]", call:false,
+            bg:"bg-[#303030]", ring:"ring-[#303030]", 
+            text:"text-[#303030]", border:"border-[#303030]", bgHover:"hover:bg-[#303030]", 
+            hex:"#303030", chessBg:"bg-[#30303098]", call:false,
             selfName:"", opponentName:""
         })
+
+        setChessExtra({ call:false, selfName:"", opponentName:""})
     }, [])
 
     useEffect(() => {
