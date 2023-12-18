@@ -1,13 +1,10 @@
 import './newHome.css';
-import {useRef, useEffect} from 'react';
+import {useRef, useEffect, useContext} from 'react';
 import { useMediaQuery } from 'react-responsive';
 import ThemeButton from '../Button/themebutton'
 import { IoIosArrowRoundForward  } from "react-icons/io";
 import {motion, useInView, useAnimation} from 'framer-motion';
 import { useNavigate } from "react-router";
-import {useRef, useEffect, useContext} from 'react';
-import ThemeButton from '../Button/themebutton'
-import { IoIosArrowRoundForward  } from "react-icons/io";
 import { ChessUtilsContext } from '../Context/context';
 
 export default function NewHome() {
