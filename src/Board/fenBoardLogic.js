@@ -300,8 +300,6 @@ const generateKingMoves = (board, fromSquare, numbers, letters) => {
     const castleMoves = castleMovesAllowed(board, fromSquare, numbers, letters);
     moves.push(...castleMoves);
 
-    console.log('castleMoves', castleMoves)
-
     return moves;
 }
 

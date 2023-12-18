@@ -13,7 +13,6 @@ function Playground() {
 
     useEffect(()=>{
         fetch(`${process.env.REACT_APP_BACKEND_URL}/api/checkroom/${roomId}`).then(res => res.json()).then(data => {
-            console.log(data)
             if(data.status === 'success'){
                 setStart(true)
             }

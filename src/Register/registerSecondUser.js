@@ -3,10 +3,11 @@ import { useParams, useNavigate } from "react-router-dom"
 import socket from "../Socket/socket";
 import ChessAnimation from "./chessAnimation";
 import { IoIosArrowRoundForward  } from "react-icons/io";
-import { ChessUtilsContext } from "../Context/context";
+import { ChessExtraContext, ChessUtilsContext } from "../Context/context";
 
 function RegisterSecondUser () {
 
+    const {chessExtra, setChessExtra} = useContext(ChessExtraContext);
     const {chessUtils, setChessUtils} = useContext(ChessUtilsContext);
     const navigate = useNavigate();
     const params = useParams();
@@ -29,7 +30,7 @@ function RegisterSecondUser () {
 
     useEffect(() => {
         if(subscribe) {
-            setChessUtils({...chessUtils, selfName: user.name})
+            setChessExtra({...chessExtra, selfName: user.name})
             navigate('/lobby', {state: {roomId: params.roomId, playerId: params.playerId, color: color}})
         }
     }, [subscribe])

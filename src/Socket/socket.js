@@ -4,7 +4,7 @@ import SockJS from 'sockjs-client';
 class socket_class {
     constructor(){
         
-        const socketUrl = 'http://localhost:8080/stomp-endpoint'; 
+        const socketUrl = `${process.env.REACT_APP_BACKEND_URL}/stomp-endpoint`; 
 
         this.sockjs = new SockJS(socketUrl);
         this.socket_client = null;

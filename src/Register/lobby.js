@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import ChessAnimation from "./chessAnimation";
 import { motion , useAnimate } from "framer-motion";
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ChessContext, ChessUtilsContext } from '../Context/context';
+import { ChessContext, ChessExtraContext } from '../Context/context';
 import socket from '../Socket/socket';
 import './lobby.css';
 
@@ -15,7 +15,7 @@ export default function NewLobby() {
     const waitText = "Waiting for opponent to join"
     const wait = waitText.split(' ')
 
-    const {chessUtils, setChessUtils} = useContext(ChessUtilsContext);
+    const {chessExtra, setChessExtra} = useContext(ChessExtraContext);
     const navigate = useNavigate();
     const {message, setMessage} = useContext(ChessContext)
     const location = useLocation();
@@ -34,51 +34,54 @@ export default function NewLobby() {
     }
 
 
-    useEffect(() => {
-        socket.subscribe(`/topic/${roomId}`, (socket_data) => {
-          const parsedData = JSON.parse(socket_data?.body);
+    useEffect(() => {       
+          socket.subscribe(`/topic/${roomId}`, (socket_data) => {
+            const parsedData = JSON.parse(socket_data?.body);
 
-          const code = parsedData?.code;
+            const code = parsedData?.code;
 
-          // for start game
-          if(code === 100){
-            const { message } = parsedData;
-            setMessage({code: 100, roomId: roomId, message: message?.message})
-          }
-          // for new move
-          if(code === 200){
-            const { message, senderId } = parsedData;
-            setMessage({code: 200, roomId: roomId, from: message?.from, to: message?.to, senderId: senderId})
-          }
-          // for subscribed to room
-          if(code === 300){
-            const { message } = parsedData;
-            setMessage({code: 300, roomId: roomId, message: message?.message})
-          }
-
-          if(code === 500){
-            const { videoMessage, senderId } = parsedData;
-            setMessage({code: 500, roomId: roomId, senderId:senderId, message: videoMessage})
-          }
-
-          if(code === 600){
-            const { message, senderId } = parsedData;
-            setMessage({code: 600, roomId: roomId, senderId:senderId, message: message?.message})
-          }
-
-          if(code === 700){
-            const { message, senderId } = parsedData;
-
-            if(senderId!==playerId){
-              setChessUtils({...chessUtils, opponentName: message?.name})
+            // for start game
+            if(code === 100){
+              const { message } = parsedData;
+              // socket.send(`/app/${roomId}`, JSON.stringify({code: 300, message: {message: "Subscribed to Room"}})
+              setMessage({code: 100, roomId: roomId, message: message?.message})
             }
-            setMessage({code: 700, roomId: roomId, senderId:senderId, message: message?.name})
-          }  
-        });
+            // for new move
+            if(code === 200){
+              const { message, senderId } = parsedData;
+              setMessage({code: 200, roomId: roomId, from: message?.from, to: message?.to, senderId: senderId})
+            }
+            // for subscribed to room
+            if(code === 300){
+              const { message } = parsedData;
+              setMessage({code: 300, roomId: roomId, message: message?.message})
+            }
+
+            if(code === 500){
+              const { videoMessage, senderId } = parsedData;
+              setMessage({code: 500, roomId: roomId, senderId:senderId, message: videoMessage})
+            }
+
+            if(code === 600){
+              const { message, senderId } = parsedData;
+              setMessage({code: 600, roomId: roomId, senderId:senderId, message: message?.message})
+            }
+
+            if(code === 700){
+              const { message, senderId } = parsedData;
+
+              if(senderId!==playerId){
+                setChessExtra({...chessExtra, opponentName: message?.name})
+              }
+              setMessage({code: 700, roomId: roomId, senderId:senderId, message: message?.name})
+            }  
+          });
     }, []);
 
 
     useEffect(() => {
+        console.log("message", message, roomId, "roomId")
+
         if(message?.code === 100){
             navigate(`/playground/${roomId}`, {state: {isBlackBoard:color?.toLowerCase()==="white"?false:true, roomId: roomId, playerId: playerId}})
         }

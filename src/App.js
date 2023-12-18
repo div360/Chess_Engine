@@ -5,7 +5,7 @@ import Invite from './Invite/invite';
 import RegisterFirstUser from './Register/registerFirstUser';
 import socket from './Socket/socket';
 import RegisterSecondUser from './Register/registerSecondUser';
-import {ChessContext, ChessUtilsContext} from './Context/context';
+import {ChessContext, ChessExtraContext, ChessUtilsContext} from './Context/context';
 import NewHome from './NewHome/newHome';
 import NotFound from './404';
 import NewLobby from './Register/lobby';
@@ -14,6 +14,7 @@ import NewLobby from './Register/lobby';
 function App() {
   const [message, setMessage] = useState(null)
   const [chessUtils, setChessUtils] = useState(null)
+  const [chessExtra, setChessExtra] = useState(null)
 
   useEffect(() => {
     if (chessUtils === null) {
@@ -23,7 +24,7 @@ function App() {
       }
       return;
     }
-    else if (chessUtils?.opponentName === "") {
+    else{
       localStorage.setItem('8by8Theme', JSON.stringify(chessUtils));
     }
   
@@ -38,23 +39,25 @@ function App() {
   }, [])
   
   return (
-    <ChessUtilsContext.Provider value={{chessUtils, setChessUtils}}>
-      <ChessContext.Provider value={{message, setMessage}}>
-        <div className="h-[100vh] bg-black">
-          <Router>
-              <Routes>
-                <Route path="/" element={<NewHome/>} />
-                <Route path="/register" element={<RegisterFirstUser/>} />
-                <Route path='/invite' element={<Invite/>} />
-                <Route path='/join/:roomId/:playerId' element={<RegisterSecondUser/>} />
-                <Route path='/lobby' element={<NewLobby/>} />
-                <Route path="/playground/:roomId" element={<Playground/>} />
-                <Route path="*" element={<NotFound/>} />
-              </Routes>
-          </Router>
-        </div>
-      </ChessContext.Provider>
-    </ChessUtilsContext.Provider>
+    <ChessExtraContext.Provider value={{chessExtra, setChessExtra}}>
+      <ChessUtilsContext.Provider value={{chessUtils, setChessUtils}}>
+        <ChessContext.Provider value={{message, setMessage}}>
+          <div className="h-[100vh] bg-black">
+            <Router>
+                <Routes>
+                  <Route path="/" element={<NewHome/>} />
+                  <Route path="/register" element={<RegisterFirstUser/>} />
+                  <Route path='/invite' element={<Invite/>} />
+                  <Route path='/join/:roomId/:playerId' element={<RegisterSecondUser/>} />
+                  <Route path='/lobby' element={<NewLobby/>} />
+                  <Route path="/playground/:roomId" element={<Playground/>} />
+                  <Route path="*" element={<NotFound/>} />
+                </Routes>
+            </Router>
+          </div>
+        </ChessContext.Provider>
+      </ChessUtilsContext.Provider>
+    </ChessExtraContext.Provider>
   );
 }
 
