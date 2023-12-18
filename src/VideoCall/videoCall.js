@@ -2,7 +2,7 @@ import React, { createRef, useContext, useEffect, useState } from 'react'
 import './videoCall.css'
 import SimplePeer from 'simple-peer'
 import socket from '../Socket/socket'
-import { ChessContext, ChessUtilsContext } from '../Context/context'
+import { ChessContext, ChessExtraContext, ChessUtilsContext } from '../Context/context'
 import { PiPhoneCallFill, PiPhoneFill } from 'react-icons/pi'
 import { motion } from 'framer-motion'
 
@@ -17,7 +17,8 @@ export default function VideoCall({roomId, playerId}) {
         FAILED: 'FAILED',
     }
 
-    const {chessUtils, setChessUtils} = useContext(ChessUtilsContext)
+    const {chessUtils} = useContext(ChessUtilsContext)
+    const {chessExtra, setChessExtra} = useContext(ChessExtraContext)
 
     const senderId = playerId
 
@@ -36,10 +37,10 @@ export default function VideoCall({roomId, playerId}) {
     const [initiator, setInitiator] = useState(false)
 
     useEffect(()=>{
-        if(chessUtils?.call === true && connectionStatus === connStatus.STAGE){
+        if(chessExtra?.call === true && connectionStatus === connStatus.STAGE){
             sendInvitation()
         }
-    }, [chessUtils?.call])
+    }, [chessExtra?.call])
 
     useEffect(()=>{
         if(message?.code === 500){
@@ -50,7 +51,7 @@ export default function VideoCall({roomId, playerId}) {
                 setOffer(payLoad)
                 if(senderId !== message?.senderId){
                     setConnectionStatus(connStatus.RECEIVING)
-                    setChessUtils({...chessUtils, call:true})
+                    setChessExtra({...chessExtra, call:true})
                 }
             }
             else if(type === 'answer'){
@@ -186,7 +187,7 @@ export default function VideoCall({roomId, playerId}) {
 
     const handleEndCall = (isFirst) => {
         setConnectionStatus(connStatus.STAGE)
-        setChessUtils({...chessUtils, call:false})
+        setChessExtra({...chessExtra, call:false})
         videoSelf.current.srcObject = null
         videoOther.current.srcObject = null
         if(simplePeer){
@@ -263,7 +264,7 @@ export default function VideoCall({roomId, playerId}) {
             
             <div className={`flex ${chessUtils?.bg} flex-col items-center justify-center w-full h-[100%] gap-2 ${otherStream===null ? 'hidden':''}`}>
                 <div className={`flex flex-row items-center justify-center w-[100%] h-full ${otherStream===null ? 'hidden':''}`}>
-                    <span className={`absolute top-8 left-5 bg-white text-black w-max px-2 font-[Poppins] text-sm rounded-sm`}>Hrishabh</span>
+                    <span className={`absolute top-8 left-5 bg-white text-black w-max px-2 font-[Poppins] text-sm rounded-sm`}>{chessExtra?.opponentName}</span>
                     <video className={`h-full w-[60%] object-cover`} ref={videoOther} autoPlay></video>
                     
                     <div className={`flex flex-col items-center justify-start h-full w-[40%] gap-4`}>

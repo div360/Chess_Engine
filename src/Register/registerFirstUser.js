@@ -2,11 +2,12 @@ import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ChessAnimation from './chessAnimation';
 import { IoIosArrowRoundForward  } from "react-icons/io";
-import { ChessUtilsContext } from '../Context/context';
+import { ChessExtraContext, ChessUtilsContext } from '../Context/context';
 
 export default function RegisterFirstUser() {
     
-    const {chessUtils, setChessUtils} = useContext(ChessUtilsContext);
+    const {chessUtils} = useContext(ChessUtilsContext);
+    const {chessExtra, setChessExtra} = useContext(ChessExtraContext);
 
     const navigate = useNavigate()
 
@@ -15,9 +16,6 @@ export default function RegisterFirstUser() {
         name: '',
         color: '',
     })
-
-    useEffect(() => {}, [chessUtils])
-
 
     const handleInputChange = (e) => {
         setUser({...user, [e.target.name]: e.target.value})
@@ -34,7 +32,7 @@ export default function RegisterFirstUser() {
             })
             .then(response => response.json())
             .then(data => {
-                setChessUtils({...chessUtils, selfName: user.name})
+                setChessExtra({...chessExtra, selfName: user.name})
                 navigate('/invite', {state: {roomId: data.roomId, player1Id: data.player1Id, player2Id: data.player2Id, player1Color: data.player1Color}}, {replace: true})
             })
             .catch(error => {

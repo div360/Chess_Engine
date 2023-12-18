@@ -2,7 +2,7 @@ import "./board.css";
 import React, {useState, useEffect, useContext, useRef } from "react";
 import { boardToFen, fenToBoard, generateLegalMoves, getPieceColor, reverseFen } from "./fenBoardLogic";
 import socket from "../Socket/socket";
-import { ChessContext, ChessUtilsContext } from "../Context/context";
+import { ChessContext, ChessExtraContext, ChessUtilsContext } from "../Context/context";
 import { PiPhoneCallFill } from "react-icons/pi";
 import { IoPersonSharp } from "react-icons/io5";
 import { RiSendPlaneFill } from "react-icons/ri";
@@ -17,7 +17,7 @@ function Board({isBlackBoardSet, playerId}) {
     
     const {roomId} = useParams();
 
-    const {message, setMessage} = useContext(ChessContext)
+    const {message, setMessage} = useContext(ChessContext);
     
     const piece_color = isBlackBoardSet ? "black" : "white";
 
@@ -38,7 +38,7 @@ function Board({isBlackBoardSet, playerId}) {
     const [kingPosition, setKingPosition] = useState({white: "e1", black: "e8"});
 
     const {chessUtils, setChessUtils} = useContext(ChessUtilsContext);
-
+    const {chessExtra, setChessExtra} = useContext(ChessExtraContext);
 
     const [isCollapsed, setIsCollapsed] = useState({chat:false, movesHistory:false});
     const [chatMessage, setChatMessage] = useState("");
@@ -47,7 +47,7 @@ function Board({isBlackBoardSet, playerId}) {
     const [eliminatedPiecesArray, setEliminatedPiecesArray] = useState([]); // [ {color: "black", piece: "queen"}, {color: "white", piece: "knight"}
 
 
-    const saveToLocalStorage = () => {
+    const saveToStorage = () => {
         let timeStamp = new Date().getTime();
         var dataToSend = {
             code: 800,
@@ -143,7 +143,6 @@ function Board({isBlackBoardSet, playerId}) {
         if(fromSquare !== null){
             const moves = generateLegalMoves(board, fromSquare, numbers, letters, kingPosition, piece_color)
 
-            console.log(moves);
             if(moves !== undefined){
                 setMoves(moves);
             }
@@ -255,7 +254,7 @@ function Board({isBlackBoardSet, playerId}) {
         setFromSquare(null);
         setToSquare(null);
         setMoves([]);
-        saveToLocalStorage();
+        saveToStorage();
     }
 
     const addMoveToMovesHistory = (piece_color, from, to, piece, hasCaptured, captured) => {
@@ -294,7 +293,7 @@ function Board({isBlackBoardSet, playerId}) {
         if(senderId !== playerId){
             setMoveCount(moveCount + 1);
         }
-        saveToLocalStorage();
+        saveToStorage();
     }
 
     useEffect(() => {
@@ -311,8 +310,6 @@ function Board({isBlackBoardSet, playerId}) {
 
 
     const getAndSendData = () => {
-        
-        
         socket.socket_client.onConnect = () => {
             socket.subscribe(`/topic/${roomId}`, (socket_data) => {
                 const parsedData = JSON.parse(socket_data?.body);
@@ -349,7 +346,7 @@ function Board({isBlackBoardSet, playerId}) {
                   const { message, senderId } = parsedData;
         
                   if(senderId!==playerId){
-                    setChessUtils({...chessUtils, opponentName: message?.name})
+                    setChessExtra({...chessExtra, opponentName: message?.name})
                   }
                   setMessage({code: 700, roomId: roomId, senderId:senderId, message: message?.name})
                 }
@@ -362,14 +359,13 @@ function Board({isBlackBoardSet, playerId}) {
             console.log(data)
             const {player1, player2} = data;
             if(player1?.id === playerId){
-                setChessUtils({...chessUtils, opponentName: player2?.name})
+                setChessExtra({...chessExtra, opponentName: player2?.name, selfName: player1?.name})
             }
             else{
-                setChessUtils({...chessUtils, opponentName: player1?.name})
+                setChessExtra({...chessExtra, opponentName: player1?.name, selfName: player2?.name})
             }
             if(data?.chessData === null) return;
             const {moveHistory, capturedPieces, moveCount, fenString} = data?.chessData;   
-            console.log(fenString)
             if(fenString !== ""){
                 setFen(fenString);
             }
@@ -397,36 +393,54 @@ function Board({isBlackBoardSet, playerId}) {
         })
     }
 
-    useEffect(()=>{
-        console.log("playerId", playerId)
+    const handleReconnectAndNameFetch = () => {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/api/getChessData/${roomId}`, {}).then(res => res.json()).then(data => {
+            console.log(data)
+            const {player1, player2} = data;
+            if(player1?.id === playerId){
+                setChessExtra({...chessExtra, opponentName: player2?.name, selfName: player1?.name})
+            }
+            else{
+                setChessExtra({...chessExtra, opponentName: player1?.name, selfName: player2?.name})
+            }
+            if(data?.chessData === null) return;
+            const {moveHistory, capturedPieces, moveCount, fenString} = data?.chessData;   
+            if(fenString !== ""){
+                setFen(fenString);
+            }
 
-        socket.send(`/app/nameExchange/${roomId}`, {
-            code: 700,
-            senderId: playerId,
-            message: {
-                name: chessUtils?.selfName
-            },
-            roomId: roomId
+            if(player1?.id === playerId){
+                if(player1?.color === "black"){
+                    setIsBlackBoard(true);
+                }
+                else{
+                    setIsBlackBoard(false);
+                }
+            }
+            else{
+                if(player2?.color === "black"){
+                    setIsBlackBoard(true);
+                }
+                else{
+                    setIsBlackBoard(false);
+                }
+            }
+
+            setMoveCount(moveCount);
+            setMovesHistoryArray(moveHistory);
+            setEliminatedPiecesArray(capturedPieces);       
         })
+    }
 
-        const handleBeforeUnload = () => {
-            localStorage.setItem('isReloading8by8', 'true');
-          };
-
-        const isReloading = localStorage.getItem('isReloading8by8');
-
-        console.log('isReloading', isReloading);
-        if (isReloading==='true') {
-            getAndSendData();
-            localStorage.removeItem('isReloading8by8');
-        }
-        
-        
-        window.addEventListener('beforeunload', handleBeforeUnload);
     
-        return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-        };
+    useEffect(() => {
+        if(socket.socket_client.connected){
+            handleReconnectAndNameFetch();
+        }
+    }, [socket.socket_client.onChangeState])
+
+    useEffect(()=>{
+        getAndSendData();
     }, [])
 
     return (
@@ -436,13 +450,10 @@ function Board({isBlackBoardSet, playerId}) {
 
             <h1 className={`text-[60px] font-[Monoton] font-medium absolute z-10 top-5 bg-white h-max ${chessUtils.text}`}>8 X 8</h1>
 
-            {/* <input className="w-1/4" type="text" value={fen} onChange={(e) => setFen(e.target.value)} /> */}
-
-
             {/* Chat and video call UI start here */}
 
             
-            <div className={`rounded-sm flex flex-row items-start absolute top-2 right-10 justify-between self-end h-[27%] w-[25%] gap-5 ${chessUtils?.bg} ${chessUtils?.call ? "":"hidden"}`}>
+            <div className={`rounded-sm flex flex-row items-start absolute top-2 right-10 justify-between self-end h-[27%] w-[25%] gap-5 ${chessUtils?.bg} ${chessExtra?.call ? "":"hidden"}`}>
                 <VideoCall roomId={roomId} playerId={playerId}/>
             </div>
             
@@ -461,7 +472,7 @@ function Board({isBlackBoardSet, playerId}) {
                         <span className="h-1 w-10 bg-white absolute left-[50%] top-2 rounded-md"></span>
                         <div className="flex flex-row items-center justify-start gap-4">
                             <IoPersonSharp className={`text-[23px] text-white`} />
-                            <h1 className="text-white font-[CenturyGothic] font-semibold text-sm">{chessUtils?.opponentName}</h1>
+                            <h1 className="text-white font-[CenturyGothic] font-semibold text-sm">{chessExtra?.opponentName}</h1>
                         </div>
                         <PiPhoneCallFill className={`text-[23px] text-white`} />
                     </div>
@@ -483,9 +494,9 @@ function Board({isBlackBoardSet, playerId}) {
                             <span className="h-1 w-10 bg-white absolute left-[50%] top-2 rounded-md"></span>
                             <div className="flex flex-row items-center justify-start gap-4">
                                 <IoPersonSharp className={`text-[23px] text-white`} />
-                                <h1 className="text-white font-[CenturyGothic] font-semibold text-sm">{chessUtils?.opponentName}</h1>
+                                <h1 className="text-white font-[CenturyGothic] font-semibold text-sm">{chessExtra?.opponentName}</h1>
                             </div>
-                            <PiPhoneCallFill onClick={(e)=>{e.stopPropagation(); setChessUtils({...chessUtils, call:true})}} className={`text-[23px] text-white cursor-pointer`} />
+                            <PiPhoneCallFill onClick={(e)=>{e.stopPropagation(); setChessExtra({...chessExtra, call:true})}} className={`text-[23px] text-white cursor-pointer`} />
                         </div>
 
                         <div ref={chatContainerRef} className="flex flex-col items-center h-[82%] bg-white w-full mb-4 py-2 overflow-y-scroll">
